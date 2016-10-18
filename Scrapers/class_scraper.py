@@ -1,73 +1,121 @@
-#!/usr/bin/python
-"""Scrapes legacy.registrar.ucla.edu for lecture/discussion data."""
-import itertools
-import re
-import requests
-import sys
-import MySQLdb as mdb
-from lxml import html
-from multiprocessing.dummy import Pool as ThreadPool
+''' Scraper that scrapes legacy.registrar.ucla.edu and sa.ucla.edu for classes. '''
 
-class SectionData:
-    """ Stores data about a class that is shared among lectures and discussions"""
-    def __init__(self, class_id, section, days, start, stop, building, room, url):
+import csv
+import os
+from multiprocessing.dummy import Pool as ThreadPool
+import re
+import string
+import sys
+import requests
+from lxml import html
+
+''' Stores the data shared between independent and dependent classes. '''
+class ClassData:
+    def __init__(self, class_id, class_type, section, url):
         self.class_id = class_id
+        self.class_type = class_type
         self.section = section
-        self.days = days
-        self.start = start
-        self.stop = stop
-        self.building = building
-        self.room = room
         self.url = url
 
-    def copy_init(self, section_data):
-        self.class_id = section_data.class_id
-        self.section = section_data.section
-        self.days = section_data.days
-        self.start = section_data.start
-        self.stop = section_data.stop
-        self.building = section_data.building
-        self.room = section_data.room
-        self.url = section_data.url
-
-class LectureData(SectionData):
-    def __init__(self, section_data):
-        self.copy_init(section_data)
-
-class DiscussionData(SectionData):
-    def __init__(self, section_data, lecture_id):
-        self.copy_init(section_data)
-        self.lecture_id = lecture_id
-
-class ClassData:
-    def __init__(self, class_title, major, term, class_url):
-        self.title = class_title
-        self.major = major
-        self.term = term
-        self.url = class_url
-        self.lectures = list()
-        self.discussions = list()
+        self.days = ""
+        self.start_time = ""
+        self.end_time = ""
+        self.location = ""
+        self.instructor = ""
 
     def __repr__(self):
-        return "ClassData(%s)" % (self.title)
+        return "ClassData: \n%s\n%s\n%s\n%s\n" % \
+               (self.class_id, self.class_type, self.section, self.url)
 
-    def __eq__(self, other):
-        if isinstance(other, ClassData):
-            return self.title == other.title
-        return False
+''' Stores the data for an independent class. '''
+class IndependentClassData(ClassData):
+    def __init__(self, class_id, class_type, section, url):
+        ClassData.__init__(self, class_id, class_type, section, url)
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        self.description = ""
+        self.units = ""
+        self.final_examination_date = ""
+        self.final_examination_day = ""
+        self.final_examination_time = ""
+        self.grade_type = ""
+        self.restrictions = ""
+        self.impacted_class = ""
+        self.level = ""
+        self.text_book_url = ""
 
-    def __hash__(self):
-        return hash(self.__repr__())
+        self.requisites = list()
+        self.ge_categories = list()
 
-    def set_lectures(self, lectures):
-        self.lectures = lectures
+    def __repr__(self):
+        return ClassData.__repr__(self)
 
-    def set_discussions(self, discussions):
-        self.discussions = discussions
+''' Stores the data for a dependent class. '''
+class DependentClassData(ClassData):
+    def __init__(self, class_id, class_type, section, url):
+        ClassData.__init__(self, class_id, class_type, section, url)
+        self.independent_class_id = self.get_independent_class_id()
 
+    def __repr__(self):
+        return ClassData.__repr__(self)
+
+    ''' Converts a char to its integer representation.  Ex. "A" -> 1. '''
+    def get_section_char_int(self):
+        char_array = [c for c in self.section if not c.isdigit()]
+        if len(char_array) == 1:
+            return ord(char_array[0]) - 64
+
+        return (ord(char_array[0]) - 64) * 26 + (ord(char_array[1]) - 64)
+
+    ''' Retruns an int that represents the dependent class number for an
+        independent class. '''
+    def get_independent_class_id(self):
+        return str(int(self.class_id) - self.get_section_char_int())
+
+''' Stores the data for a course.  A course can have multiple (in)dependent classes. '''
+class CourseData:
+    def __init__(self, course_id, title, url):
+        self.course_id = course_id
+        self.title = title
+        self.url = url
+        self.independent_class_data = list()
+        self.dependent_class_data = list()
+
+    def __repr__(self):
+        return "CourseData: \n%s\n%s\n%s\n%s\n%s\n" % \
+               (self.course_id, self.title, self.url, self.independent_class_data, \
+                self.dependent_class_data)
+
+    ''' Returns true if a section is a independent class. '''
+    def is_independent_class(self, section):
+        for c in section:
+            if not c.isdigit():
+                return False
+        return True
+
+    ''' Checks if a class is independent/dependent, and adds the class accordingly. '''
+    def add_class(self, class_id, class_type, section, url):
+        if self.is_independent_class(section):
+            self.independent_class_data.append(IndependentClassData(class_id, class_type, \
+                                                                    section, url))
+        else:
+            self.dependent_class_data.append(DependentClassData(class_id, class_type, \
+                                                                section, url))
+
+''' Stores the data for a major.  A major can have multiple courses. '''
+class MajorData:
+    def __init__(self, term, major, major_code, url):
+        self.term = term
+        self.major = major
+        self.major_code = major_code
+        self.url = url
+
+        self.course_data = list()
+
+    def __repr__(self):
+        return "MajorData: \n%s\n%s\n%s\n%s\n%s\n" % \
+               (self.term, self.major, self.major_code, self.url, self.course_data)
+
+''' Returns the page for a given url. Retries up to 10 times to retrieve the page. '''
 def get_page(url):
     page = None
     max_tries = 10
@@ -77,34 +125,26 @@ def get_page(url):
             page = requests.get(url)
         except Exception:
             print "Connection aborted... trying again"
-            --max_tries
+            max_tries -= 1
             if max_tries == 0:
                 raise Exception('Connection aborted 10 times for ' + url)
-            pass
     return page
 
-def generate_lecture_url(srs, term):
-    return "http://legacy.registrar.ucla.edu/schedule/subdet.aspx?srs=" + srs + \
-           "&term=" + term + "&session="
-
-def generate_class_description_url(termsel, subareasel, idxcrs):
-    return "http://legacy.registrar.ucla.edu/schedule/detselect.aspx?termsel=" + termsel + \
-           "&subareasel=" + subareasel + "&idxcrs=" + idxcrs
-
-def generate_class_id_url(termsel, subareasel):
-    return "http://legacy.registrar.ucla.edu/schedule/crsredir.aspx?termsel=" + termsel + \
-           "&subareasel=" + subareasel
-
+''' Extracts the class id from a url. '''
 def get_class_id(url):
     match = re.compile('srs=(.*)&term')
     return match.search(url).group(1)
 
+''' Wrapper function for list retrieval. Returns empty string if the index is 
+    out of range.  '''
 def get_if_exists(l, index):
     if len(l) <= index or index < 0:
         return ""
     else:
         return l[index]
 
+''' Wrapper function for list insertion. Appends to the end of the list if
+    the index is out of range. '''
 def assign(l, index, value):
     if len(l) <= index:
         l.append(value)
@@ -113,200 +153,299 @@ def assign(l, index, value):
 
     return l
 
-def get_lectures_and_discussions(class_data):
-    print "Getting lectures/discussions for " + class_data.title
-    page = get_page(class_data.url)
-    tree = html.fromstring(page.content)
-    lecture_tables = tree.xpath('//table[starts-with(@id, "dgdLectureHeader")]')
-    lecture_count = len(lecture_tables)
-    if lecture_count == 0:
-        return class_data
+def format_for_url(subareasel):
+    return subareasel.strip().replace(' ', '+')
 
-    urls = tree.xpath('//td[@class="dgdClassDataColumnIDNumber"]//a//@href')
-    sections = tree.xpath('//td[@class="dgdClassDataSectionNumber"]//span//span//text() | ' \
-                          '//td[@class="dgdClassDataSectionNumber"]//span//text()')
-    days = tree.xpath('//td[@class="dgdClassDataDays"]//span//span//text() | ' \
-                      '//td[@class="dgdClassDataDays"]//span//text()')
-    start_times = tree.xpath('//td[@class="dgdClassDataTimeStart"]//span//span//text() | ' \
-                             '//td[@class="dgdClassDataTimeStart"]//span//text()')
-    end_times = tree.xpath('//td[@class="dgdClassDataTimeEnd"]//span//span//text() | ' \
-                           '//td[@class="dgdClassDataTimeEnd"]//span//text()')
-    buildings = tree.xpath('//td[@class="dgdClassDataBuilding"]//span//span//text() | ' \
-                           '//td[@class="dgdClassDataBuilding"]//span//text()')
-    rooms = tree.xpath('//td[@class="dgdClassDataRoom"]//span//span//text() | ' \
-                       '//td[@class="dgdClassDataRoom"]//span//text()')
-    ids = [(lambda url: get_class_id(url))(url) for url in urls]
-    start_times = [(lambda time: time + "M")(time) for time in start_times]
-    end_times = [(lambda time: time + "M")(time) for time in end_times]
-    urls = [(lambda url: generate_lecture_url(lecture_id, class_data.term))(lecture_id) \
-            for lecture_id in ids]
+def generate_class_number(section):
+    total = string.maketrans('', '')
+    return int(section.translate(total, total.translate(total, string.digits)))
 
-    section_data = list()
+def generate_section_url(term, major, crs_catlg_no, class_id, class_no):
+    return "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=" + term + \
+           "&subj_area_cd=" + format_for_url(major) + "&crs_catlg_no=" + \
+           crs_catlg_no.replace(' ', '+') + "&class_id=" + class_id + "&class_no=%20" + \
+           ("%03d" % generate_class_number(class_no))
 
-    max_length = max(max(len(ids), len(start_times)), len(buildings))
-    for i in range(max_length):
-        if i != 0:
-            if get_if_exists(ids, i) == "":
-                assign(ids, i, get_if_exists(ids, i-1))
-            if get_if_exists(sections, i) == "":
-                assign(sections, i, get_if_exists(sections, i-1))
-            if get_if_exists(days, i) == "":
-                assign(days, i, get_if_exists(days, i-1))
-            if get_if_exists(start_times, i) == "":
-                assign(start_times, i, get_if_exists(start_times, i-1))
-            if get_if_exists(end_times, i) == "":
-                assign(end_times, i, get_if_exists(end_times, i-1))
-            if get_if_exists(buildings, i) == "":
-                assign(buildings, i, get_if_exists(buildings, i-1))
-            if get_if_exists(rooms, i) == "":
-                assign(rooms, i, get_if_exists(rooms, i-1))
-            if get_if_exists(urls, i) == "":
-                assign(urls, i, get_if_exists(urls, i-1))
+def generate_course_description_url(termsel, subareasel, idxcrs):
+    return "http://legacy.registrar.ucla.edu/schedule/detselect.aspx?termsel=" + termsel + \
+           "&subareasel=" + format_for_url(subareasel) + "&idxcrs=" + idxcrs
 
+def generate_major_url(termsel, subareasel):
+    return "http://legacy.registrar.ucla.edu/schedule/crsredir.aspx?termsel=" + termsel + \
+           "&subareasel=" + format_for_url(subareasel)
 
-        section_data.append(SectionData(ids[i], sections[i], days[i], \
-                                        get_if_exists(start_times, i), \
-                                        get_if_exists(end_times, i), \
-                                        get_if_exists(buildings, i), \
-                                        get_if_exists(rooms, i), urls[i]))
-    lecture_data = list()
-    discussion_data = list()
-
-    section_size = len(section_data) / lecture_count
-    lecture_id = ""
-    for i, section in enumerate(section_data):
-        if i % section_size == 0:
-            lecture_id = section.class_id
-            lecture_data.append(LectureData(section))
-        else:
-            discussion_data.append(DiscussionData(section, lecture_id))
-
-    class_data.set_lectures(lecture_data)
-    class_data.set_discussions(discussion_data)
-
-    return class_data
-
-def get_major_class_details(termsel, subareasel):
-    print "Getting classes for " + termsel + " " + subareasel
-    page = get_page(generate_class_id_url(termsel, subareasel))
-    tree = html.fromstring(page.content)
-    class_ids = tree.xpath('//option//@value')
-    class_titles = tree.xpath('//option/text()')
-    class_data = list()
-
-    for i, class_id in enumerate(class_ids):
-        class_data.append(ClassData(class_titles[i], subareasel, termsel, \
-                          generate_class_description_url(termsel, subareasel, class_id)))
-
-    return class_data
-
-def get_class_list(termsel):
+def get_major_list(term):
     page = get_page("http://legacy.registrar.ucla.edu/schedule/schedulehome.aspx")
     tree = html.fromstring(page.content)
-    majors = tree.xpath( \
+    major_codes = tree.xpath( \
         '//select[@id="ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea"]//option//@value')
 
-    class_data_list = list()
+    major_titles = tree.xpath( \
+        '//select[@id="ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea"]//option//text()')
 
-    reformatted_major_titles = list()
+    major_list = list()
 
-    for major in majors:
-        reformatted_major_titles.append("+".join(major.split(' ')))
+    for i in range(len(major_titles)):
+        major_list.append(MajorData(term, major_titles[i], major_codes[i], \
+                                    generate_major_url(term, major_codes[i])))
 
-    pool = ThreadPool(4)
-    class_data_list = pool.map(lambda args: get_major_class_details(*args), \
-                               itertools.izip(itertools.repeat(termsel), \
-                               reformatted_major_titles))
-    pool.close()
-    pool.join()
+    return major_list
 
-    return [class_data for major_class_data in class_data_list for class_data in major_class_data]
+def get_major_course_list(major_data):
+    print "Getting courses for " + major_data.major
+    page = get_page(major_data.url)
+    tree = html.fromstring(page.content)
+    course_ids = tree.xpath('//option//@value')
+    course_titles = tree.xpath('//option//text()')
 
-def get_total_class_list():
-    class_data = list()
+    for i in range(len(course_ids)):
+        course_id = course_ids[i].strip()
+        course_title = course_titles[i].strip()
 
-    for term in ['16W', '16S', '16F']:
-        term_class_data = get_class_list(term)
-        class_data.extend(term_class_data)
-        break
+        major_data.course_data.append( \
+            CourseData(course_id, course_title, \
+                       generate_course_description_url(major_data.term, major_data.major_code, \
+                                                       course_id)))
 
-    pool = ThreadPool(4)
-    class_data_list = pool.map(get_lectures_and_discussions, class_data)
-    pool.close()
-    pool.join()
+def check_if_url_is_valid(url):
+    request = requests.get(url)
+    if request.status_code != 200:
+        print url + " does not exist"
 
-    return class_data_list
+def get_course_data(major_data):
+    term = major_data.term
+    major_code = major_data.major_code
 
-def write_to_db(class_data_list):
-    db = mdb.connect('localhost', 'cs130', 'cs130')
-    cursor = db.cursor()
+    print "Getting course data for " + major_data.major
+    for course_data in major_data.course_data:
+        course_id = course_data.course_id
 
-    sql = 'CREATE DATABASE IF NOT EXISTS cs130'
-    cursor.execute(sql)
+        page = get_page(course_data.url)
+        tree = html.fromstring(page.content)
+        lecture_tables = tree.xpath('//table[starts-with(@id, "dgdLectureHeader")]')
+        lecture_count = len(lecture_tables)
+        if lecture_count == 0:
+            return major_data
 
-    sql = 'USE cs130'
-    cursor.execute(sql)
+        urls = tree.xpath('//td[@class="dgdClassDataColumnIDNumber"]//a//@href')
+        sections = tree.xpath('//td[@class="dgdClassDataSectionNumber"]//span//text()')
+        types = tree.xpath('//td[@class="dgdClassDataActType"]//span//text()')
 
-    sql = '''CREATE TABLE IF NOT EXISTS lecture_data (
-    id INT NOT NULL AUTO_INCREMENT,
-    lecture_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    major VARCHAR(255) NOT NULL,
-    term VARCHAR(255) NOT NULL,
-    section VARCHAR(255) NOT NULL,
-    days VARCHAR(255) NOT NULL,
-    start VARCHAR(10) NOT NULL,
-    stop VARCHAR(10) NOT NULL,
-    building VARCHAR(255),
-    room VARCHAR(255),
-    url VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
-    )'''
-    cursor.execute(sql)
+        ids = [(lambda url: get_class_id(url))(url) for url in urls]
+        if len(urls) != len(sections) or len(urls) != len(types):
+            print "incorrect data format: " + course_data.url
+        for i in range(len(ids)):
+            course_data.add_class(ids[i], types[i], sections[i], \
+                generate_section_url(term, major_code, course_id, \
+                                     ids[i], sections[i]))
 
-    sql = '''CREATE TABLE IF NOT EXISTS discussion_data (
-    id INT NOT NULL AUTO_INCREMENT,
-    discussion_id INT NOT NULL,
-    lecture_id INT NOT NULL,
-    section VARCHAR(255) NOT NULL,
-    days VARCHAR(255) NOT NULL,
-    start VARCHAR(10) NOT NULL,
-    stop VARCHAR(10) NOT NULL,
-    building VARCHAR(255),
-    room VARCHAR(255),
-    url VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
-    )'''
-    cursor.execute(sql)
+def get_independent_class_data(independent_class_data):
+    page = get_page(independent_class_data.url.strip())
+    tree = html.fromstring(page.content)
 
+    independent_class_data.days = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span3"]//a//@data-content'), 0)
+    independent_class_data.location = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span5"]//a//@data-content'), 0)
+    times_str = get_if_exists(tree.xpath( \
+        '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span4"]//text()'), 0)
+    if times_str != "":
+        times = times_str.split('-')
 
-    for class_data in class_data_list:
-        title = class_data.title
-        major = " ".join(class_data.major.split("+"))
-        term = class_data.term
-        for lecture in class_data.lectures:
-            sql = "INSERT INTO lecture_data(lecture_id, title, major, term, section, days, " \
-                  "start, stop, building, room, url) VALUES (%s, %s, %s, %s, %s, %s, %s, " \
-                  "%s, %s, %s, %s)"
-            cursor.execute(sql, (lecture.class_id, title, major, term, lecture.section, \
-                                 lecture.days, lecture.start, \
-                                 lecture.stop, lecture.building, \
-                                 lecture.room, lecture.url))
-        for discussion in class_data.discussions:
-            sql = "INSERT INTO discussion_data(discussion_id, lecture_id, section, days, " \
-                  "start, stop, building, room, url) VALUES (%s, %s, %s, %s, %s, " \
-                  "%s, %s, %s, %s)"
-            cursor.execute(sql, (discussion.class_id, discussion.lecture_id, discussion.section, \
-                                 discussion.days, discussion.start, discussion.stop, \
-                                 discussion.building, discussion.room, discussion.url))
-    try:
-        db.commit()
-    except:
-        print "Write to db failed"
-        db.rollback()
-    db.close()
-    
+        if len(times) == 2:
+            independent_class_data.start_time = times[0]
+            independent_class_data.end_time = times[1]
+        else:
+            independent_class_data.start_time = times[0]
+            independent_class_data.end_time = times[0]
+
+    independent_class_data.units = get_if_exists(tree.xpath( \
+        '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span6"]//text()'), 0)
+    independent_class_data.instructor = get_if_exists(tree.xpath( \
+        '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span7"]//text()'), 0)
+
+    independent_class_data.final_examination_date = get_if_exists( \
+        tree.xpath('//div[@id="final_exam_info"]//div[1]//div[2]//div[@class="span1"]//text()'), 0)
+    independent_class_data.final_examination_day = get_if_exists( \
+        tree.xpath('//div[@id="final_exam_info"]//div[1]//div[2]//div[@class="span2"]//text()'), 0)
+    independent_class_data.final_examination_time = get_if_exists( \
+        tree.xpath('//div[@id="final_exam_info"]//div[1]//div[2]//div[@class="span3"]//text()'), 0)
+
+    course_description = get_if_exists(tree.xpath('//div[@id="section"]//p[2]//text()'), 0)
+    class_description = get_if_exists(tree.xpath('//div[@id="section"]//p[4]//text()'), 0)
+
+    if course_description != "None":
+        independent_class_data.description += course_description
+    if course_description != "None" and class_description != "None":
+        independent_class_data.description += " "
+    if class_description != "None":
+        independent_class_data.description += class_description
+
+    independent_class_data.grade_type = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span1"]//p//text()'), 0)
+    independent_class_data.restrictions = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span2"]//p//text()'), 1)
+    independent_class_data.impacted_class = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span3"]//p//text()'), 0)
+    independent_class_data.level = get_if_exists(tree.xpath( \
+        '//div[@id="enrollment_info"]//div[2]//div[@class="span5"]//p//text()'), 0)
+    independent_class_data.text_book_url = get_if_exists(tree.xpath( \
+        '//div[@id="textbooks"]//a//@href'), 0)
+
+    requisites = tree.xpath('//div[@id="course_requisites"]//div[@class="overflow-autoScroll"]' \
+                            '//a[@class="popover-right"]//text()')
+
+    for requisite in requisites:
+        requisite = requisite.strip()
+        if requisite.endswith(" and"):
+            independent_class_data.requisites.append(requisite[:-4].strip())
+        else:
+            independent_class_data.requisites.append(requisite.strip())
+
+    ge_categories = tree.xpath( \
+        '//p[@class="section_data GE_subsection_data breakLongText"]//text()')
+    for ge_category in ge_categories:
+        independent_class_data.ge_categories.append(ge_category.strip())
+    return independent_class_data
+
+def get_dependent_class_data(dependent_class_data):
+    page = get_page(dependent_class_data.url)
+    tree = html.fromstring(page.content)
+
+    dependent_class_data.days = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span3"]//a//@data-content'), 0)
+    dependent_class_data.location = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span5"]//a//@data-content'), 0)
+    times_str = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span4"]//text()'), 0)
+    if times_str != "":
+        times = times_str.split('-')
+
+        if len(times) == 2:
+            dependent_class_data.start_time = times[0]
+            dependent_class_data.end_time = times[1]
+        else:
+            dependent_class_data.start_time = times[0]
+            dependent_class_data.end_time = times[0]
+
+    dependent_class_data.instructor = get_if_exists( \
+        tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span7"]//text()'), 0)
+
+def get_class_data(major_data):
+    print "Getting class data for " + major_data.major
+    for course_data in major_data.course_data:
+        for independent_class_data in course_data.independent_class_data:
+            get_independent_class_data(independent_class_data)
+        for dependent_class_data in course_data.dependent_class_data:
+            get_dependent_class_data(dependent_class_data)
+
+def write_to_csv(major_data_list):
+    os_dir = os.path.dirname(__file__)
+    independent_classes_filename = os.path.join( \
+        os_dir, '../ClassSchedulizer/db/independent_class_data.csv')
+    independent_classes_file = open(independent_classes_filename, 'w')
+    independent_classes_writer = csv.writer(independent_classes_file, delimiter=',', \
+        lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+    independent_classes_writer.writerow(( \
+        "lecture_id", "class_type", "section", "course_id", "title", "major", \
+        "major_code", "term", "description", "days", "start_time", "end_time", "location", \
+        "units", "instructor", "final_examination_date", "final_examination_day", \
+        "final_examination_time", "grade_type", "restrictions", "impacted_class", \
+        "level", "text_book_url", "url"))
+
+    dependent_classes_filename = os.path.join( \
+        os_dir, '../ClassSchedulizer/db/dependent_class_data.csv')
+    dependent_classes_file = open(dependent_classes_filename, 'w')
+    dependent_classes_writer = csv.writer(dependent_classes_file, delimiter=',', \
+        lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+    dependent_classes_writer.writerow(( \
+        "class_id", "lecture_id", "class_type", "section", "course_id", \
+        "title", "major", "major_code", "term", "days", "start_time", "end_time", \
+        "location", "instructor", "url"))
+
+    requisites_filename = os.path.join(os_dir, '../ClassSchedulizer/db/requisites.csv')
+    requisites_file = open(requisites_filename, 'w')
+    requisites_writer = csv.writer(requisites_file, delimiter=',', \
+        lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+    requisites_writer.writerow(("course", "requisite_course"))
+
+    ge_filename = os.path.join(os_dir, '../ClassSchedulizer/db/ge_categories.csv')
+    ge_file = open(ge_filename, 'w')
+    ge_writer = csv.writer(ge_file, delimiter=',', lineterminator='\r\n', \
+        quoting=csv.QUOTE_ALL)
+    ge_writer.writerow(("course_id", "foundation", "category"))
+    major_code_map = dict()
+    for major_data in major_data_list:
+        term = major_data.term
+        major = major_data.major
+        major_code = major_data.major_code
+        major_code_map[major] = major_code
+        requisites = set()
+
+        for course_data in major_data.course_data:
+            course_id = course_data.course_id
+            title = course_data.title
+            
+
+            for independent_class_data in course_data.independent_class_data:
+                lecture_id = independent_class_data.class_id
+                independent_classes_writer.writerow((lecture_id, \
+                    independent_class_data.class_type, independent_class_data.section, \
+                    course_id, title, major, major_code, term, independent_class_data.description, \
+                    independent_class_data.days, independent_class_data.start_time, \
+                    independent_class_data.end_time, independent_class_data.location, \
+                    independent_class_data.units, independent_class_data.instructor, \
+                    independent_class_data.final_examination_date, \
+                    independent_class_data.final_examination_day, \
+                    independent_class_data.final_examination_time, \
+                    independent_class_data.grade_type, \
+                    independent_class_data.restrictions, independent_class_data.impacted_class, \
+                    independent_class_data.level, independent_class_data.text_book_url, \
+                    independent_class_data.url))
+
+                for requisite in independent_class_data.requisites:
+                    title_number = title.split("-", 1)[0].strip()
+                    requisite_tokens = requisite.rsplit(" ", 1)
+
+                    requisites.add((title_number, major_code_map[requisite_tokens[0]] + \
+                                    " " + requisite_tokens[1]))
+
+                for ge_category in independent_class_data.ge_categories:
+                    ge_category_tokens = ge_category.split('-')
+                    if len(ge_category_tokens) == 2:
+                        ge_writer.writerow((lecture_id, ge_category_tokens[0].strip(),
+                                            ge_category_tokens[1].strip()))
+
+            for dependent_class_data in course_data.dependent_class_data:
+                dependent_classes_writer.writerow((dependent_class_data.class_id, \
+                    dependent_class_data.independent_class_id, dependent_class_data.class_type, \
+                    dependent_class_data.section, course_id, title, major, major_code, \
+                    term, dependent_class_data.days, dependent_class_data.start_time, \
+                    dependent_class_data.end_time, dependent_class_data.location, \
+                    dependent_class_data.instructor, dependent_class_data.url))
+
+        for requisite_course_id, requisite_title in requisites:
+                requisites_writer.writerow((requisite_course_id, requisite_title))
+                
+    independent_classes_file.close()
+    dependent_classes_file.close()
+    requisites_file.close()
+    ge_file.close()
+
 if __name__ == "__main__":
     reload(sys)
     sys.setdefaultencoding('utf-8')
-    write_to_db(get_total_class_list())
+    majors = get_major_list('16F')
+    course_list_pool = ThreadPool(4)
+    course_list_pool.map(get_major_course_list, majors)
+    course_list_pool.close()
+    course_list_pool.join()
+    course_data_pool = ThreadPool(4)
+    course_data_pool.map(get_course_data, majors)
+    course_data_pool.close()
+    course_data_pool.join()
+    class_data_pool = ThreadPool(4)
+    class_data_pool.map(get_class_data, majors)
+    class_data_pool.close()
+    class_data_pool.join()
+    write_to_csv(majors)
