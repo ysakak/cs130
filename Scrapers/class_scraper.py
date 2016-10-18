@@ -156,6 +156,7 @@ def assign(l, index, value):
 def format_for_url(subareasel):
     return subareasel.strip().replace(' ', '+')
 
+''' Extracts the numbers from class ids. '''
 def generate_class_number(section):
     total = string.maketrans('', '')
     return int(section.translate(total, total.translate(total, string.digits)))
@@ -174,6 +175,7 @@ def generate_major_url(termsel, subareasel):
     return "http://legacy.registrar.ucla.edu/schedule/crsredir.aspx?termsel=" + termsel + \
            "&subareasel=" + format_for_url(subareasel)
 
+''' Returns the list of all majors for a term. '''
 def get_major_list(term):
     page = get_page("http://legacy.registrar.ucla.edu/schedule/schedulehome.aspx")
     tree = html.fromstring(page.content)
@@ -191,6 +193,7 @@ def get_major_list(term):
 
     return major_list
 
+''' Gets a list of courses offered by a major for a specific term. '''
 def get_major_course_list(major_data):
     print "Getting courses for " + major_data.major
     page = get_page(major_data.url)
@@ -207,11 +210,7 @@ def get_major_course_list(major_data):
                        generate_course_description_url(major_data.term, major_data.major_code, \
                                                        course_id)))
 
-def check_if_url_is_valid(url):
-    request = requests.get(url)
-    if request.status_code != 200:
-        print url + " does not exist"
-
+''' Gets a list of lectures, discussions, etc.. for a major. '''
 def get_course_data(major_data):
     term = major_data.term
     major_code = major_data.major_code
@@ -239,6 +238,7 @@ def get_course_data(major_data):
                 generate_section_url(term, major_code, course_id, \
                                      ids[i], sections[i]))
 
+''' Gets the data for a independent class(Lectures, discussions). '''
 def get_independent_class_data(independent_class_data):
     page = get_page(independent_class_data.url.strip())
     tree = html.fromstring(page.content)
@@ -375,12 +375,13 @@ def write_to_csv(major_data_list):
         quoting=csv.QUOTE_ALL)
     ge_writer.writerow(("course_id", "foundation", "category"))
     major_code_map = dict()
+    requisites = set()
+
     for major_data in major_data_list:
         term = major_data.term
         major = major_data.major
         major_code = major_data.major_code
         major_code_map[major] = major_code
-        requisites = set()
 
         for course_data in major_data.course_data:
             course_id = course_data.course_id
@@ -424,9 +425,9 @@ def write_to_csv(major_data_list):
                     dependent_class_data.end_time, dependent_class_data.location, \
                     dependent_class_data.instructor, dependent_class_data.url))
 
-        for requisite_course_id, requisite_title in requisites:
-                requisites_writer.writerow((requisite_course_id, requisite_title))
-                
+    for requisite_course_id, requisite_title in requisites:
+        requisites_writer.writerow((requisite_course_id, requisite_title))
+
     independent_classes_file.close()
     dependent_classes_file.close()
     requisites_file.close()
