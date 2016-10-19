@@ -9,6 +9,16 @@ import sys
 import requests
 from lxml import html
 
+class Requisite:
+    def __init__(self, operator, course_title_1, course_title_2):
+        self.operator = operator
+        self.course_title_1 = course_title_1
+        self.course_title_2 = course_title_2
+
+    def __repr__(self):
+        return "Requisite(%s, %s, %s)" % \
+            (operator, course_title_1, course_title_2)
+
 ''' Stores the data shared between independent and dependent classes. '''
 class ClassData:
     def __init__(self, class_id, class_type, section, url):
@@ -23,40 +33,20 @@ class ClassData:
         self.location = ""
         self.instructor = ""
 
-    def __repr__(self):
-        return "ClassData: \n%s\n%s\n%s\n%s\n" % \
-               (self.class_id, self.class_type, self.section, self.url)
-
 ''' Stores the data for an independent class. '''
 class IndependentClassData(ClassData):
     def __init__(self, class_id, class_type, section, url):
         ClassData.__init__(self, class_id, class_type, section, url)
 
-        self.description = ""
-        self.units = ""
         self.final_examination_date = ""
         self.final_examination_day = ""
         self.final_examination_time = ""
-        self.grade_type = ""
-        self.restrictions = ""
-        self.impacted_class = ""
-        self.level = ""
-        self.text_book_url = ""
-
-        self.requisites = list()
-        self.ge_categories = list()
-
-    def __repr__(self):
-        return ClassData.__repr__(self)
 
 ''' Stores the data for a dependent class. '''
 class DependentClassData(ClassData):
     def __init__(self, class_id, class_type, section, url):
         ClassData.__init__(self, class_id, class_type, section, url)
         self.independent_class_id = self.get_independent_class_id()
-
-    def __repr__(self):
-        return ClassData.__repr__(self)
 
     ''' Converts a char to its integer representation.  Ex. "A" -> 1. '''
     def get_section_char_int(self):
@@ -77,13 +67,18 @@ class CourseData:
         self.course_id = course_id
         self.title = title
         self.url = url
+        self.description = ""
+        self.units = ""
+        self.grade_type = ""
+        self.restrictions = ""
+        self.impacted_class = ""
+        self.level = ""
+        self.text_book_url = ""
+
         self.independent_class_data = list()
         self.dependent_class_data = list()
-
-    def __repr__(self):
-        return "CourseData: \n%s\n%s\n%s\n%s\n%s\n" % \
-               (self.course_id, self.title, self.url, self.independent_class_data, \
-                self.dependent_class_data)
+        self.requisites = list()
+        self.ge_categories = list()
 
     ''' Returns true if a section is a independent class. '''
     def is_independent_class(self, section):
@@ -110,10 +105,6 @@ class MajorData:
         self.url = url
 
         self.course_data = list()
-
-    def __repr__(self):
-        return "MajorData: \n%s\n%s\n%s\n%s\n%s\n" % \
-               (self.term, self.major, self.major_code, self.url, self.course_data)
 
 ''' Returns the page for a given url. Retries up to 10 times to retrieve the page. '''
 def get_page(url):
@@ -154,7 +145,7 @@ def assign(l, index, value):
     return l
 
 def format_for_url(subareasel):
-    return subareasel.strip().replace(' ', '+')
+    return subareasel.strip().replace(' ', '+').replace('&', '%26')
 
 ''' Extracts the numbers from class ids. '''
 def generate_class_number(section):
@@ -195,11 +186,16 @@ def get_major_list(term):
 
 ''' Gets a list of courses offered by a major for a specific term. '''
 def get_major_course_list(major_data):
-    print "Getting courses for " + major_data.major
     page = get_page(major_data.url)
     tree = html.fromstring(page.content)
     course_ids = tree.xpath('//option//@value')
     course_titles = tree.xpath('//option//text()')
+    major = get_if_exists(tree.xpath('//span[@class="heading2green"]//text()'), 0)
+
+    if major != "":
+        major_data.major = major
+
+    print "Getting courses for " + major_data.major
 
     for i in range(len(course_ids)):
         course_id = course_ids[i].strip()
@@ -238,7 +234,77 @@ def get_course_data(major_data):
                 generate_section_url(term, major_code, course_id, \
                                      ids[i], sections[i]))
 
-''' Gets the data for a independent class(Lectures, discussions). '''
+        course_title_tokens = course_data.title.strip().split('-', 1)
+        course_data.course_id = course_title_tokens[0].strip()
+        course_data.title = course_title_tokens[1].strip()
+
+def get_additional_course_data(course_data, url):
+    page = get_page(url.strip())
+    tree = html.fromstring(page.content)
+
+    course_data.units = get_if_exists(tree.xpath( \
+        '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span6"]//text()'), 0)
+
+    course_description = get_if_exists(tree.xpath('//div[@id="section"]//p[2]//text()'), 0)
+    class_description = get_if_exists(tree.xpath('//div[@id="section"]//p[4]//text()'), 0)
+
+    if course_description != "None":
+        course_data.description += course_description
+    if course_description != "None" and class_description != "None":
+        course_data.description += " "
+    if class_description != "None":
+        course_data.description += class_description
+
+    course_data.grade_type = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span1"]//p//text()'), 0)
+    course_data.restrictions = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span2"]//p//text()'), 1)
+    course_data.impacted_class = get_if_exists( \
+        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span3"]//p//text()'), 0)
+    course_data.level = get_if_exists(tree.xpath( \
+        '//div[@id="enrollment_info"]//div[2]//div[@class="span5"]//p//text()'), 0)
+    course_data.text_book_url = get_if_exists(tree.xpath( \
+        '//div[@id="textbooks"]//a//@href'), 0)
+
+    requisites = tree.xpath('//div[@id="course_requisites"]//div[@class="overflow-autoScroll"]' \
+                            '//a[@class="popover-right"]//text()')
+    
+    tmp_class_title_store = ""
+    prev_was_or = False
+
+    for requisite in requisites:
+        requisite = re.sub('[()]', '', requisite).strip()
+        if requisite.endswith(" and"):
+            if prev_was_or:
+                course_data.requisites.append(Requisite("OR", tmp_class_title_store, \
+                                                        requisite[:-4].strip()))
+            else:
+                course_data.requisites.append(Requisite("AND", requisite[:-4].strip(), ""))
+            prev_was_or = False
+            tmp_class_title_store = ""
+        elif requisite.endswith(" or"):
+            if prev_was_or:
+                course_data.requisites.append(Requisite("OR", tmp_class_title_store, \
+                                                        requisite[:-3].strip()))
+                tmp_class_title_store = requisite[:-3].strip()
+            else:
+                tmp_class_title_store = requisite[:-3].strip()
+            prev_was_or = True
+        else:
+            if prev_was_or:
+                course_data.requisites.append(Requisite("OR", tmp_class_title_store, \
+                                                        requisite.strip()))
+            else:
+                course_data.requisites.append(Requisite("AND", requisite.strip(), ""))
+            prev_was_or = False
+            tmp_class_title_store = ""
+
+    ge_categories = tree.xpath( \
+        '//p[@class="section_data GE_subsection_data breakLongText"]//text()')
+    for ge_category in ge_categories:
+        course_data.ge_categories.append(ge_category.strip())
+
+''' Gets the data for a independent class(lectures, discussions). '''
 def get_independent_class_data(independent_class_data):
     page = get_page(independent_class_data.url.strip())
     tree = html.fromstring(page.content)
@@ -259,8 +325,6 @@ def get_independent_class_data(independent_class_data):
             independent_class_data.start_time = times[0]
             independent_class_data.end_time = times[0]
 
-    independent_class_data.units = get_if_exists(tree.xpath( \
-        '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span6"]//text()'), 0)
     independent_class_data.instructor = get_if_exists(tree.xpath( \
         '//div[@id="enrl_mtng_info"]//div[2]//div[@class="span7"]//text()'), 0)
 
@@ -271,43 +335,7 @@ def get_independent_class_data(independent_class_data):
     independent_class_data.final_examination_time = get_if_exists( \
         tree.xpath('//div[@id="final_exam_info"]//div[1]//div[2]//div[@class="span3"]//text()'), 0)
 
-    course_description = get_if_exists(tree.xpath('//div[@id="section"]//p[2]//text()'), 0)
-    class_description = get_if_exists(tree.xpath('//div[@id="section"]//p[4]//text()'), 0)
-
-    if course_description != "None":
-        independent_class_data.description += course_description
-    if course_description != "None" and class_description != "None":
-        independent_class_data.description += " "
-    if class_description != "None":
-        independent_class_data.description += class_description
-
-    independent_class_data.grade_type = get_if_exists( \
-        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span1"]//p//text()'), 0)
-    independent_class_data.restrictions = get_if_exists( \
-        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span2"]//p//text()'), 1)
-    independent_class_data.impacted_class = get_if_exists( \
-        tree.xpath('//div[@id="enrollment_info"]//div[2]//div[@class="span3"]//p//text()'), 0)
-    independent_class_data.level = get_if_exists(tree.xpath( \
-        '//div[@id="enrollment_info"]//div[2]//div[@class="span5"]//p//text()'), 0)
-    independent_class_data.text_book_url = get_if_exists(tree.xpath( \
-        '//div[@id="textbooks"]//a//@href'), 0)
-
-    requisites = tree.xpath('//div[@id="course_requisites"]//div[@class="overflow-autoScroll"]' \
-                            '//a[@class="popover-right"]//text()')
-
-    for requisite in requisites:
-        requisite = requisite.strip()
-        if requisite.endswith(" and"):
-            independent_class_data.requisites.append(requisite[:-4].strip())
-        else:
-            independent_class_data.requisites.append(requisite.strip())
-
-    ge_categories = tree.xpath( \
-        '//p[@class="section_data GE_subsection_data breakLongText"]//text()')
-    for ge_category in ge_categories:
-        independent_class_data.ge_categories.append(ge_category.strip())
-    return independent_class_data
-
+''' Gets the data for a independent class(discussions, labs, ..). '''
 def get_dependent_class_data(dependent_class_data):
     page = get_page(dependent_class_data.url)
     tree = html.fromstring(page.content)
@@ -331,14 +359,21 @@ def get_dependent_class_data(dependent_class_data):
     dependent_class_data.instructor = get_if_exists( \
         tree.xpath('//div[@id="enrl_mtng_info"]//div[2]//div[@class="span7"]//text()'), 0)
 
+''' Gets the data for (in)dependent classes. '''
 def get_class_data(major_data):
     print "Getting class data for " + major_data.major
     for course_data in major_data.course_data:
+        processed_additonal_data = False
+
         for independent_class_data in course_data.independent_class_data:
+            if not processed_additonal_data:
+                get_additional_course_data(course_data, independent_class_data.url)
+                processed_additonal_data = True
             get_independent_class_data(independent_class_data)
         for dependent_class_data in course_data.dependent_class_data:
             get_dependent_class_data(dependent_class_data)
 
+''' Writes the class data to csv files. '''
 def write_to_csv(major_data_list):
     os_dir = os.path.dirname(__file__)
     independent_classes_filename = os.path.join( \
@@ -367,7 +402,8 @@ def write_to_csv(major_data_list):
     requisites_file = open(requisites_filename, 'w')
     requisites_writer = csv.writer(requisites_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)
-    requisites_writer.writerow(("course", "requisite_course"))
+    requisites_writer.writerow(("course_id", "operator", "requisite_course_id_1", \
+                                "requisite_course_id_2"))
 
     ge_filename = os.path.join(os_dir, '../ClassSchedulizer/db/ge_categories.csv')
     ge_file = open(ge_filename, 'w')
@@ -378,6 +414,7 @@ def write_to_csv(major_data_list):
     requisites = set()
 
     for major_data in major_data_list:
+        print "Writing data for " + major_data.major + " to file."
         term = major_data.term
         major = major_data.major
         major_code = major_data.major_code
@@ -386,36 +423,27 @@ def write_to_csv(major_data_list):
         for course_data in major_data.course_data:
             course_id = course_data.course_id
             title = course_data.title
-            
+            description = course_data.description
+            units = course_data.units
+            grade_type = course_data.grade_type
+            restrictions = course_data.restrictions
+            impacted_class = course_data.impacted_class
+            level = course_data.level
+            text_book_url = course_data.text_book_url
 
             for independent_class_data in course_data.independent_class_data:
                 lecture_id = independent_class_data.class_id
                 independent_classes_writer.writerow((lecture_id, \
                     independent_class_data.class_type, independent_class_data.section, \
-                    course_id, title, major, major_code, term, independent_class_data.description, \
+                    course_id, title, major, major_code, term, description, \
                     independent_class_data.days, independent_class_data.start_time, \
                     independent_class_data.end_time, independent_class_data.location, \
-                    independent_class_data.units, independent_class_data.instructor, \
+                    units, independent_class_data.instructor, \
                     independent_class_data.final_examination_date, \
                     independent_class_data.final_examination_day, \
                     independent_class_data.final_examination_time, \
-                    independent_class_data.grade_type, \
-                    independent_class_data.restrictions, independent_class_data.impacted_class, \
-                    independent_class_data.level, independent_class_data.text_book_url, \
+                    grade_type, restrictions, impacted_class, level, text_book_url, \
                     independent_class_data.url))
-
-                for requisite in independent_class_data.requisites:
-                    title_number = title.split("-", 1)[0].strip()
-                    requisite_tokens = requisite.rsplit(" ", 1)
-
-                    requisites.add((title_number, major_code_map[requisite_tokens[0]] + \
-                                    " " + requisite_tokens[1]))
-
-                for ge_category in independent_class_data.ge_categories:
-                    ge_category_tokens = ge_category.split('-')
-                    if len(ge_category_tokens) == 2:
-                        ge_writer.writerow((lecture_id, ge_category_tokens[0].strip(),
-                                            ge_category_tokens[1].strip()))
 
             for dependent_class_data in course_data.dependent_class_data:
                 dependent_classes_writer.writerow((dependent_class_data.class_id, \
@@ -425,9 +453,36 @@ def write_to_csv(major_data_list):
                     dependent_class_data.end_time, dependent_class_data.location, \
                     dependent_class_data.instructor, dependent_class_data.url))
 
-    for requisite_course_id, requisite_title in requisites:
-        requisites_writer.writerow((requisite_course_id, requisite_title))
+            for requisite in course_data.requisites:
+                requisites.add((course_id, requisite))
 
+            for ge_category in course_data.ge_categories:
+                ge_category_tokens = ge_category.split('-')
+                if len(ge_category_tokens) == 2:
+                    ge_writer.writerow((course_id, ge_category_tokens[0].strip(),
+                                        ge_category_tokens[1].strip()))
+
+    for total_course_id, requisite in requisites:
+        course_title_1_tokens = requisite.course_title_1.rsplit(' ', 1)
+        course_title_1 = course_title_1_tokens[0].strip()
+        course_title_id_1 = course_title_1_tokens[1].strip()
+        if course_title_1 in major_code_map.keys():
+            course_title_1 = major_code_map[course_title_1]
+
+        if requisite.operator == "OR":
+            course_title_2_tokens = requisite.course_title_2.rsplit(' ', 1)
+            course_title_2 = course_title_2_tokens[0].strip()
+            course_title_id_2 = course_title_2_tokens[1].strip()
+            if course_title_2 in major_code_map.keys():
+                course_title_2 = major_code_map[course_title_2]
+
+            requisites_writer.writerow((total_course_id, requisite.operator, \
+                                        course_title_1 + " " + course_title_id_1, \
+                                        course_title_2 + " " + course_title_id_2))
+        else:
+            requisites_writer.writerow((total_course_id, requisite.operator, \
+                                        course_title_1 + " " + course_title_id_1, \
+                                        ""))
     independent_classes_file.close()
     dependent_classes_file.close()
     requisites_file.close()
@@ -436,15 +491,19 @@ def write_to_csv(major_data_list):
 if __name__ == "__main__":
     reload(sys)
     sys.setdefaultencoding('utf-8')
+
     majors = get_major_list('16F')
+
     course_list_pool = ThreadPool(4)
     course_list_pool.map(get_major_course_list, majors)
     course_list_pool.close()
     course_list_pool.join()
+
     course_data_pool = ThreadPool(4)
     course_data_pool.map(get_course_data, majors)
     course_data_pool.close()
     course_data_pool.join()
+
     class_data_pool = ThreadPool(4)
     class_data_pool.map(get_class_data, majors)
     class_data_pool.close()
