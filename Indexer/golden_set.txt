@@ -1,0 +1,32 @@
+# Lines starting with '#' are ignored.
+# Format: {Target Course ID, Course ID 1, operator, Course ID 2/Rank}
+# Sample use cases:
+# COM SCI 111, EDUC 19, <, COM SCI 131
+#   In the similarity ranking for COM SCI 111, COM SCI 131 should
+#   rank higher than EDUC 19
+# COM SCI 111, COM SCI 131, >, EDUC 19
+#   In the similarity ranking for COM SCI 111, COM SCI 131 should
+#   rank higher than EDUC 19
+# COM SCI 111, COM SCI 131, =, 1
+#   In the similarity ranking for COM SCI 111, COM SCI 131 should
+#   rank first.
+#
+#
+ANTHRO 8, ANTHRO 9, =, 1
+ANTHRO 9, ANTHRO 8, =, 1
+AF AMER M10A, HIST M10A, =, 1
+CH ENGR 101A, BIOENGR 188, >, EL ENGR 102
+HIST 127B, HIST 176A, <, HIST 135A
+LING M150, LING 114, >, I E STD M150
+CHEM 20AH, CHEM 20A, =, 1
+CHEM 20AH, MATH 32AH, <, LIFESCI 30A
+MATH 131AH, MATH 131A, =, 1
+M E STD 177, WL ARTS 120, <, IRANIAN 187
+SOC GEN 105B, ANTHRO 126, >, SOC GEN 134
+THEATER 14A, THEATER 12, >, THEATER 13
+COM SCI M184, C&S BIO M184, >, COM SCI M117
+PHYSICS 89, PHYSICS 19, >, SOCIOL 89
+ETHNMUS 71FF, MUSC 62CF, >, MUSC 64AF
+ART HIS M110A, ART HIS C152B, <, ART HIS 115E
+COMPTNG 10A, COM SCI 31, =, 1
+MECH&AE M20, MECH&AE 82, <, COM SCI 31
