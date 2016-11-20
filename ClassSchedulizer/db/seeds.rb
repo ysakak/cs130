@@ -28,17 +28,17 @@ csv.each do |row|
 	if row['start_time'].nil? || row['start_time'].empty? || row['start_time'] == "To be arranged"
 		t.start_time = nil
 	elsif row['start_time'].include? ":"
-		t.start_time = Time.strptime(row['start_time'], '%l:%M%P')
+		t.start_time = Time.strptime(row['start_time'] + " UTC", '%l:%M%P %Z')
 	else
-		t.start_time = Time.strptime(row['start_time'], '%l%P')
+		t.start_time = Time.strptime(row['start_time'] + " UTC", '%l%P %Z')
 	end
 
 	if row['end_time'].nil? || row['end_time'].empty? || row['end_time'] == "To be arranged"
 		t.end_time = nil
 	elsif row['end_time'].include? ":"
-		t.end_time = Time.strptime(row['end_time'], '%l:%M%P')
+		t.end_time = Time.strptime(row['end_time'] + " UTC", '%l:%M%P %Z')
 	else
-		t.end_time = Time.strptime(row['end_time'], '%l%P')
+		t.end_time = Time.strptime(row['end_time'] + " UTC", '%l%P %Z')
 	end
 
 	t.location = row['location']
@@ -80,17 +80,17 @@ csv.each do |row|
 	if row['start_time'].nil? || row['start_time'].empty? || row['start_time'] == "To be arranged"
 		t.start_time = nil
 	elsif row['start_time'].include? ":"
-		t.start_time = Time.strptime(row['start_time'], '%l:%M%P')
+		t.start_time = Time.strptime(row['start_time'] + " UTC", '%l:%M%P %Z')
 	else
-		t.start_time = Time.strptime(row['start_time'], '%l%P')
+		t.start_time = Time.strptime(row['start_time'] + " UTC", '%l%P %Z')
 	end
 
 	if row['end_time'].nil? || row['end_time'].empty? || row['end_time'] == "To be arranged"
 		t.end_time = nil
 	elsif row['end_time'].include? ":"
-		t.end_time = Time.strptime(row['end_time'], '%l:%M%P')
+		t.end_time = Time.strptime(row['end_time'] + " UTC", '%l:%M%P %Z')
 	else
-		t.end_time = Time.strptime(row['end_time'], '%l%P')
+		t.end_time = Time.strptime(row['end_time'] + " UTC", '%l%P %Z')
 	end
 
 	t.location = row['location']

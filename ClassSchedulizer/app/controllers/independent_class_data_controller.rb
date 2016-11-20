@@ -4,7 +4,7 @@ class IndependentClassDataController < ApplicationController
   # GET /independent_class_data
   # GET /independent_class_data.json
   def index
-    @independent_class_data = IndependentClassData.all
+    @independent_class_data = IndependentClassData.search(params[:search])
   end
 
   # GET /independent_class_data/1
