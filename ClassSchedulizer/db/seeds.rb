@@ -25,7 +25,7 @@ csv.each do |row|
 	t.description = row['description']
 	t.days = row['days']
 
-	if row['start_time'].nil? || row['start_time'].empty?
+	if row['start_time'].nil? || row['start_time'].empty? || row['start_time'] == "To be arranged"
 		t.start_time = nil
 	elsif row['start_time'].include? ":"
 		t.start_time = Time.strptime(row['start_time'], '%l:%M%P')
@@ -33,7 +33,7 @@ csv.each do |row|
 		t.start_time = Time.strptime(row['start_time'], '%l%P')
 	end
 
-	if row['end_time'].eql? ""
+	if row['end_time'].nil? || row['end_time'].empty? || row['end_time'] == "To be arranged"
 		t.end_time = nil
 	elsif row['end_time'].include? ":"
 		t.end_time = Time.strptime(row['end_time'], '%l:%M%P')
@@ -62,8 +62,6 @@ csv.each do |row|
 	puts "#{t.title} saved"
 end
 
-puts "There are now #{IndependentClassDatum.count} rows in the independent class data table"
-
 csv_dependent_class = File.read(Rails.root.join('lib', 'seeds', 'dependent_class_data.csv'))
 csv = CSV.parse(csv_dependent_class, :headers => true, :encoding => 'UTF-8')
 csv.each do |row|
@@ -79,7 +77,7 @@ csv.each do |row|
 	t.term = row['term']
 	t.days = row['days']
 
-	if row['start_time'].nil? || row['start_time'].empty?
+	if row['start_time'].nil? || row['start_time'].empty? || row['start_time'] == "To be arranged"
 		t.start_time = nil
 	elsif row['start_time'].include? ":"
 		t.start_time = Time.strptime(row['start_time'], '%l:%M%P')
@@ -87,7 +85,7 @@ csv.each do |row|
 		t.start_time = Time.strptime(row['start_time'], '%l%P')
 	end
 
-	if row['end_time'].eql? ""
+	if row['end_time'].nil? || row['end_time'].empty? || row['end_time'] == "To be arranged"
 		t.end_time = nil
 	elsif row['end_time'].include? ":"
 		t.end_time = Time.strptime(row['end_time'], '%l:%M%P')
@@ -100,7 +98,8 @@ csv.each do |row|
 	t.url = row['url']
 
 	t.save
-	puts "#{t.title} saved"
+	puts "#{t.title} #{t.section} saved"
 end
 
-puts "There are now #{DependentClassDatum.count} rows in the independent class data table"
+puts "There are now #{IndependentClassDatum.count} rows in the independent class data table"
+puts "There are now #{DependentClassDatum.count} rows in the dependent class data table"
