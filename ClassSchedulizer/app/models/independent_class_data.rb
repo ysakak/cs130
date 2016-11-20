@@ -1,5 +1,5 @@
 class IndependentClassData < ApplicationRecord
-  validates :days, presence: true
+  has_many :dependent_classes, :class_name => 'DependentClassData', :primary_key => 'lecture_id', :foreign_key => 'lecture_id'
 
   def days_to_array()
     day_mapper = {}
