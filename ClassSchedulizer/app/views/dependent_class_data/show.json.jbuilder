@@ -1,1 +1,1 @@
-json.partial! "dependent_class_data/dependent_class_datum", dependent_class_datum: @dependent_class_datum
+json.partial! "dependent_class_data/dependent_class_data", dependent_class_data: @dependent_class_data

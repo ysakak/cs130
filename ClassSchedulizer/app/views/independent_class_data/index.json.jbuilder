@@ -1,1 +1,1 @@
-json.array! @independent_class_data, partial: 'independent_class_data/independent_class_datum', as: :independent_class_datum
+json.array! @independent_class_data, partial: 'independent_class_data/independent_class_data', as: :independent_class_data

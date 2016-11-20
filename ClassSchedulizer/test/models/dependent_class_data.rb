@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DependentClassDatumTest < ActiveSupport::TestCase
+class DependentClassDataTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

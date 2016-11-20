@@ -1,2 +1,2 @@
-class IndependentClassDatum < ApplicationRecord
+class IndependentClassData < ApplicationRecord
 end

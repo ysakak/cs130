@@ -1,2 +1,2 @@
-class DependentClassDatum < ApplicationRecord
+class DependentClassData < ApplicationRecord
 end

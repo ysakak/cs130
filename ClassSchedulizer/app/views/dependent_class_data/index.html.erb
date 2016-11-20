@@ -25,26 +25,26 @@
   </thead>
 
   <tbody>
-    <% @dependent_class_data.each do |dependent_class_datum| %>
+    <% @dependent_class_data.each do |dependent_class_data| %>
       <tr>
-        <td><%= dependent_class_datum.class_id %></td>
-        <td><%= dependent_class_datum.lecture_id %></td>
-        <td><%= dependent_class_datum.class_type %></td>
-        <td><%= dependent_class_datum.section %></td>
-        <td><%= dependent_class_datum.course_id %></td>
-        <td><%= dependent_class_datum.title %></td>
-        <td><%= dependent_class_datum.major %></td>
-        <td><%= dependent_class_datum.major_code %></td>
-        <td><%= dependent_class_datum.term %></td>
-        <td><%= dependent_class_datum.days %></td>
-        <td><%= dependent_class_datum.start_time %></td>
-        <td><%= dependent_class_datum.end_time %></td>
-        <td><%= dependent_class_datum.location %></td>
-        <td><%= dependent_class_datum.instructor %></td>
-        <td><%= dependent_class_datum.url %></td>
-        <td><%= link_to 'Show', dependent_class_datum %></td>
-        <td><%= link_to 'Edit', edit_dependent_class_datum_path(dependent_class_datum) %></td>
-        <td><%= link_to 'Destroy', dependent_class_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= dependent_class_data.class_id %></td>
+        <td><%= dependent_class_data.lecture_id %></td>
+        <td><%= dependent_class_data.class_type %></td>
+        <td><%= dependent_class_data.section %></td>
+        <td><%= dependent_class_data.course_id %></td>
+        <td><%= dependent_class_data.title %></td>
+        <td><%= dependent_class_data.major %></td>
+        <td><%= dependent_class_data.major_code %></td>
+        <td><%= dependent_class_data.term %></td>
+        <td><%= dependent_class_data.days %></td>
+        <td><%= dependent_class_data.start_time %></td>
+        <td><%= dependent_class_data.end_time %></td>
+        <td><%= dependent_class_data.location %></td>
+        <td><%= dependent_class_data.instructor %></td>
+        <td><%= dependent_class_data.url %></td>
+        <td><%= link_to 'Show', dependent_class_data %></td>
+        <td><%= link_to 'Edit', edit_dependent_class_data_path(dependent_class_data) %></td>
+        <td><%= link_to 'Destroy', dependent_class_data, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -52,4 +52,4 @@
 
 <br>
 
-<%= link_to 'New Dependent Class Datum', new_dependent_class_datum_path %>
+<%= link_to 'New Dependent Class Datum', new_dependent_class_data_path %>
