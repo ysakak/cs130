@@ -1,5 +1,5 @@
 <div id="calendar"></div>
-
+<div><%= @chosen_classes %></div>
 <script>
   $('#calendar').fullCalendar({
     handleWindowResize: true,
@@ -12,5 +12,6 @@
     minTime: "08:00:00",
     maxTime: "20:00:00",
     allDaySlot: false,
+    events: <%= @chosen_classes %>,
   });
 </script>
