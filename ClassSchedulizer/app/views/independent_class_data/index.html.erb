@@ -5,15 +5,12 @@
 <table>
   <thead>
     <tr>
-      <th>Lecture</th>
       <th>Class type</th>
       <th>Section</th>
       <th>Course</th>
       <th>Title</th>
       <th>Major</th>
-      <th>Major code</th>
       <th>Term</th>
-      <th>Description</th>
       <th>Days</th>
       <th>Start time</th>
       <th>End time</th>
@@ -24,11 +21,7 @@
       <th>Final examination day</th>
       <th>Final examination time</th>
       <th>Grade type</th>
-      <th>Restrictions</th>
-      <th>Impacted class</th>
       <th>Level</th>
-      <th>Text book url</th>
-      <th>Url</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -36,18 +29,20 @@
   <tbody>
     <% @independent_class_data.each do |independent_class_datum| %>
       <tr>
-        <td><%= independent_class_datum.lecture_id %></td>
         <td><%= independent_class_datum.class_type %></td>
         <td><%= independent_class_datum.section %></td>
         <td><%= independent_class_datum.course_id %></td>
         <td><%= independent_class_datum.title %></td>
         <td><%= independent_class_datum.major %></td>
-        <td><%= independent_class_datum.major_code %></td>
         <td><%= independent_class_datum.term %></td>
-        <td><%= independent_class_datum.description %></td>
         <td><%= independent_class_datum.days %></td>
-        <td><%= independent_class_datum.start_time %></td>
-        <td><%= independent_class_datum.end_time %></td>
+        <td>
+          <% require 'time' %>
+          <%= independent_class_datum.start_time.try(:strftime, "%l:%M%P") %>
+        </td>
+        <td>
+          <%= independent_class_datum.end_time.try(:strftime, "%l:%M%P") %>
+        </td>
         <td><%= independent_class_datum.location %></td>
         <td><%= independent_class_datum.units %></td>
         <td><%= independent_class_datum.instructor %></td>
@@ -55,14 +50,7 @@
         <td><%= independent_class_datum.final_examination_day %></td>
         <td><%= independent_class_datum.final_examination_time %></td>
         <td><%= independent_class_datum.grade_type %></td>
-        <td><%= independent_class_datum.restrictions %></td>
-        <td><%= independent_class_datum.impacted_class %></td>
         <td><%= independent_class_datum.level %></td>
-        <td><%= independent_class_datum.text_book_url %></td>
-        <td><%= independent_class_datum.url %></td>
-        <td><%= link_to 'Show', independent_class_datum %></td>
-        <td><%= link_to 'Edit', edit_independent_class_datum_path(independent_class_datum) %></td>
-        <td><%= link_to 'Destroy', independent_class_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

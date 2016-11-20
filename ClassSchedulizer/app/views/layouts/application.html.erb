@@ -9,6 +9,11 @@
   </head>
 
   <body>
+  	<%= form_tag(independent_class_data_path, :method => "get", id: "search-form") do %>
+    <%= text_field_tag :search, params[:search], placeholder: "Search your major" %>
+    <%= submit_tag "Search", :name => nil %>
+	  <% end %>
+
     <%= yield %>
   </body>
 </html>
