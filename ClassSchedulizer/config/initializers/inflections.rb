@@ -14,3 +14,7 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.irregular 'dependent_class_data', 'dependent_class_data'
+  inflect.irregular 'independent_class_data', 'independent_class_data'
+end

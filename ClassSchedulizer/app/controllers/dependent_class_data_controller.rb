@@ -1,10 +1,10 @@
 class DependentClassDataController < ApplicationController
-  before_action :set_dependent_class_datum, only: [:show, :edit, :update, :destroy]
+  before_action :set_dependent_class_data, only: [:show, :edit, :update, :destroy]
 
   # GET /dependent_class_data
   # GET /dependent_class_data.json
   def index
-    @dependent_class_data = DependentClassDatum.all
+    @dependent_class_data = DependentClassData.all
   end
 
   # GET /dependent_class_data/1
@@ -14,7 +14,7 @@ class DependentClassDataController < ApplicationController
 
   # GET /dependent_class_data/new
   def new
-    @dependent_class_datum = DependentClassDatum.new
+    @dependent_class_data = DependentClassData.new
   end
 
   # GET /dependent_class_data/1/edit
@@ -24,15 +24,15 @@ class DependentClassDataController < ApplicationController
   # POST /dependent_class_data
   # POST /dependent_class_data.json
   def create
-    @dependent_class_datum = DependentClassDatum.new(dependent_class_datum_params)
+    @dependent_class_data = DependentClassData.new(dependent_class_data_params)
 
     respond_to do |format|
-      if @dependent_class_datum.save
-        format.html { redirect_to @dependent_class_datum, notice: 'Dependent class datum was successfully created.' }
-        format.json { render :show, status: :created, location: @dependent_class_datum }
+      if @dependent_class_data.save
+        format.html { redirect_to @dependent_class_data, notice: 'Dependent class datum was successfully created.' }
+        format.json { render :show, status: :created, location: @dependent_class_data }
       else
         format.html { render :new }
-        format.json { render json: @dependent_class_datum.errors, status: :unprocessable_entity }
+        format.json { render json: @dependent_class_data.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -41,12 +41,12 @@ class DependentClassDataController < ApplicationController
   # PATCH/PUT /dependent_class_data/1.json
   def update
     respond_to do |format|
-      if @dependent_class_datum.update(dependent_class_datum_params)
-        format.html { redirect_to @dependent_class_datum, notice: 'Dependent class datum was successfully updated.' }
-        format.json { render :show, status: :ok, location: @dependent_class_datum }
+      if @dependent_class_data.update(dependent_class_data_params)
+        format.html { redirect_to @dependent_class_data, notice: 'Dependent class datum was successfully updated.' }
+        format.json { render :show, status: :ok, location: @dependent_class_data }
       else
         format.html { render :edit }
-        format.json { render json: @dependent_class_datum.errors, status: :unprocessable_entity }
+        format.json { render json: @dependent_class_data.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,7 +54,7 @@ class DependentClassDataController < ApplicationController
   # DELETE /dependent_class_data/1
   # DELETE /dependent_class_data/1.json
   def destroy
-    @dependent_class_datum.destroy
+    @dependent_class_data.destroy
     respond_to do |format|
       format.html { redirect_to dependent_class_data_url, notice: 'Dependent class datum was successfully destroyed.' }
       format.json { head :no_content }
@@ -63,12 +63,12 @@ class DependentClassDataController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_dependent_class_datum
-      @dependent_class_datum = DependentClassDatum.find(params[:id])
+    def set_dependent_class_data
+      @dependent_class_data = DependentClassData.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def dependent_class_datum_params
-      params.require(:dependent_class_datum).permit(:class_id, :lecture_id, :class_type, :section, :course_id, :title, :major, :major_code, :term, :days, :start_time, :end_time, :location, :instructor, :url)
+    def dependent_class_data_params
+      params.require(:dependent_class_data).permit(:class_id, :lecture_id, :class_type, :section, :course_id, :title, :major, :major_code, :term, :days, :start_time, :end_time, :location, :instructor, :url)
     end
 end

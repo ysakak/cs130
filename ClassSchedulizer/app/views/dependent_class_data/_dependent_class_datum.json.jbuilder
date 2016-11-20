@@ -1,2 +1,0 @@
-json.extract! dependent_class_datum, :id, :class_id, :lecture_id, :class_type, :section, :course_id, :title, :major, :major_code, :term, :days, :start_time, :end_time, :location, :instructor, :url, :created_at, :updated_at
-json.url dependent_class_datum_url(dependent_class_datum, format: :json)

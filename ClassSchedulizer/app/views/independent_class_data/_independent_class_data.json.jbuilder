@@ -1,0 +1,2 @@
+json.extract! independent_class_data, :id, :lecture_id, :class_type, :section, :course_id, :title, :major, :major_code, :term, :description, :days, :start_time, :end_time, :location, :units, :instructor, :final_examination_date, :final_examination_day, :final_examination_time, :grade_type, :restrictions, :impacted_class, :level, :text_book_url, :url, :created_at, :updated_at
+json.url independent_class_data_url(independent_class_data, format: :json)

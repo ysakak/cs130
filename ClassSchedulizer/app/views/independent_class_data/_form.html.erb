@@ -1,10 +1,10 @@
-<%= form_for(independent_class_datum) do |f| %>
-  <% if independent_class_datum.errors.any? %>
+<%= form_for(independent_class_data) do |f| %>
+  <% if independent_class_data.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(independent_class_datum.errors.count, "error") %> prohibited this independent_class_datum from being saved:</h2>
+      <h2><%= pluralize(independent_class_data.errors.count, "error") %> prohibited this independent_class_data from being saved:</h2>
 
       <ul>
-      <% independent_class_datum.errors.full_messages.each do |message| %>
+      <% independent_class_data.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>

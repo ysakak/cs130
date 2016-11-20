@@ -27,30 +27,30 @@
   </thead>
 
   <tbody>
-    <% @independent_class_data.each do |independent_class_datum| %>
+    <% @independent_class_data.each do |independent_class_data| %>
       <tr>
-        <td><%= independent_class_datum.class_type %></td>
-        <td><%= independent_class_datum.section %></td>
-        <td><%= independent_class_datum.course_id %></td>
-        <td><%= independent_class_datum.title %></td>
-        <td><%= independent_class_datum.major %></td>
-        <td><%= independent_class_datum.term %></td>
-        <td><%= independent_class_datum.days %></td>
+        <td><%= independent_class_data.class_type %></td>
+        <td><%= independent_class_data.section %></td>
+        <td><%= independent_class_data.course_id %></td>
+        <td><%= independent_class_data.title %></td>
+        <td><%= independent_class_data.major %></td>
+        <td><%= independent_class_data.term %></td>
+        <td><%= independent_class_data.days %></td>
         <td>
           <% require 'time' %>
-          <%= independent_class_datum.start_time.try(:strftime, "%l:%M%P") %>
+          <%= independent_class_data.start_time.try(:strftime, "%l:%M%P") %>
         </td>
         <td>
-          <%= independent_class_datum.end_time.try(:strftime, "%l:%M%P") %>
+          <%= independent_class_data.end_time.try(:strftime, "%l:%M%P") %>
         </td>
-        <td><%= independent_class_datum.location %></td>
-        <td><%= independent_class_datum.units %></td>
-        <td><%= independent_class_datum.instructor %></td>
-        <td><%= independent_class_datum.final_examination_date %></td>
-        <td><%= independent_class_datum.final_examination_day %></td>
-        <td><%= independent_class_datum.final_examination_time %></td>
-        <td><%= independent_class_datum.grade_type %></td>
-        <td><%= independent_class_datum.level %></td>
+        <td><%= independent_class_data.location %></td>
+        <td><%= independent_class_data.units %></td>
+        <td><%= independent_class_data.instructor %></td>
+        <td><%= independent_class_data.final_examination_date %></td>
+        <td><%= independent_class_data.final_examination_day %></td>
+        <td><%= independent_class_data.final_examination_time %></td>
+        <td><%= independent_class_data.grade_type %></td>
+        <td><%= independent_class_data.level %></td>
       </tr>
     <% end %>
   </tbody>
@@ -58,4 +58,4 @@
 
 <br>
 
-<%= link_to 'New Independent Class Datum', new_independent_class_datum_path %>
+<%= link_to 'New Independent Class Data', new_independent_class_data_path %>
