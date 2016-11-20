@@ -492,7 +492,7 @@ if __name__ == "__main__":
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
-    majors = get_major_list('16F')
+    majors = get_major_list('17W')
 
     course_list_pool = ThreadPool(4)
     course_list_pool.map(get_major_course_list, majors)
