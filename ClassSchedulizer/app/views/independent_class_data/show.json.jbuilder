@@ -1,0 +1,1 @@
+json.partial! "independent_class_data/independent_class_datum", independent_class_datum: @independent_class_datum

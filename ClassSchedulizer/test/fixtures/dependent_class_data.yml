@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  class_id: 1
+  lecture_id: 1
+  class_type: MyString
+  section: MyString
+  course_id: MyString
+  title: MyString
+  major: MyString
+  major_code: MyString
+  term: MyString
+  days: MyString
+  start_time: 2016-11-19 22:08:29
+  end_time: 2016-11-19 22:08:29
+  location: MyString
+  instructor: MyString
+  url: MyString
+
+two:
+  class_id: 1
+  lecture_id: 1
+  class_type: MyString
+  section: MyString
+  course_id: MyString
+  title: MyString
+  major: MyString
+  major_code: MyString
+  term: MyString
+  days: MyString
+  start_time: 2016-11-19 22:08:29
+  end_time: 2016-11-19 22:08:29
+  location: MyString
+  instructor: MyString
+  url: MyString

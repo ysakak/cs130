@@ -15,3 +15,8 @@
 
 # Ignore Byebug command history file.
 .byebug_history
+
+.gitignore
+../.DS_Store
+.DS_Store
+lib/.DS_Store

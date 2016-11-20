@@ -1,0 +1,53 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  lecture_id: 1
+  class_type: MyString
+  section: 1
+  course_id: MyString
+  title: MyString
+  major: MyString
+  major_code: MyString
+  term: MyString
+  description: MyText
+  days: MyString
+  start_time: 2016-11-19 16:13:04
+  end_time: 2016-11-19 16:13:04
+  location: MyString
+  units: 1
+  instructor: MyString
+  final_examination_date: 2016-11-19
+  final_examination_day: MyString
+  final_examination_time: MyString
+  grade_type: MyString
+  restrictions: MyString
+  impacted_class: MyString
+  level: MyString
+  text_book_url: MyString
+  url: MyString
+
+two:
+  lecture_id: 1
+  class_type: MyString
+  section: 1
+  course_id: MyString
+  title: MyString
+  major: MyString
+  major_code: MyString
+  term: MyString
+  description: MyText
+  days: MyString
+  start_time: 2016-11-19 16:13:04
+  end_time: 2016-11-19 16:13:04
+  location: MyString
+  units: 1
+  instructor: MyString
+  final_examination_date: 2016-11-19
+  final_examination_day: MyString
+  final_examination_time: MyString
+  grade_type: MyString
+  restrictions: MyString
+  impacted_class: MyString
+  level: MyString
+  text_book_url: MyString
+  url: MyString

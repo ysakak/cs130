@@ -1,0 +1,92 @@
+<%= form_for(dependent_class_datum) do |f| %>
+  <% if dependent_class_datum.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(dependent_class_datum.errors.count, "error") %> prohibited this dependent_class_datum from being saved:</h2>
+
+      <ul>
+      <% dependent_class_datum.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :class_id %>
+    <%= f.number_field :class_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :lecture_id %>
+    <%= f.number_field :lecture_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :class_type %>
+    <%= f.text_field :class_type %>
+  </div>
+
+  <div class="field">
+    <%= f.label :section %>
+    <%= f.text_field :section %>
+  </div>
+
+  <div class="field">
+    <%= f.label :course_id %>
+    <%= f.text_field :course_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :major %>
+    <%= f.text_field :major %>
+  </div>
+
+  <div class="field">
+    <%= f.label :major_code %>
+    <%= f.text_field :major_code %>
+  </div>
+
+  <div class="field">
+    <%= f.label :term %>
+    <%= f.text_field :term %>
+  </div>
+
+  <div class="field">
+    <%= f.label :days %>
+    <%= f.text_field :days %>
+  </div>
+
+  <div class="field">
+    <%= f.label :start_time %>
+    <%= f.time_select :start_time %>
+  </div>
+
+  <div class="field">
+    <%= f.label :end_time %>
+    <%= f.time_select :end_time %>
+  </div>
+
+  <div class="field">
+    <%= f.label :location %>
+    <%= f.text_field :location %>
+  </div>
+
+  <div class="field">
+    <%= f.label :instructor %>
+    <%= f.text_field :instructor %>
+  </div>
+
+  <div class="field">
+    <%= f.label :url %>
+    <%= f.text_field :url %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

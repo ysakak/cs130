@@ -1,0 +1,2 @@
+class IndependentClassDatum < ApplicationRecord
+end
