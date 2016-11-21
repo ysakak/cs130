@@ -15,9 +15,7 @@ class IndependentClassDataController < ApplicationController
       @dependent_classes = @independent_class_data.dependent_classes
     end
 
-    respond_to do |format|
-      format.js {render layout: false}
-    end
+    render layout: false
   end
 
   # GET /independent_class_data/new

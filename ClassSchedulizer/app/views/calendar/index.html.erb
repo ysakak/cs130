@@ -60,7 +60,6 @@ $(document.body).on("click", ".card", function() {
         dataType: 'html',
         data: {
             id: $(this).attr('id'),
-            major: $('#search').val()
         },
         success: function(data) {
             stateDataStack.push(data);
@@ -77,8 +76,6 @@ $(document.body).on("click", "#independent-class-btn", function() {
         dataType: 'html',
         data: {
             id: $(this).attr('independent_class_id'),
-            class_id: $(this).attr('class_id'),
-            major: $(this).attr('major')
         },
         success: function(data) {
             stateDataStack.push(data);

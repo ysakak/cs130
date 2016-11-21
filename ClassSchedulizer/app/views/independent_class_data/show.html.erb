@@ -61,24 +61,46 @@
     </table>
     <table class="table">
       <tr>
-        <th colspan=5>Enrollment Information</th>
+        <% if @dependent_classes.length == 0 %>
+          <th colspan=6>Enrollment Information</th>
+        <% else %>
+          <th colspan=5>Enrollment Information</th>
+        <% end %>
       </tr>
       <tr>
-        <th>Units</th>
-        <th>Grade Type</th>
-        <th>Restrictions</th>
-        <th>Impacted</th>
-        <th>Level</th>
+        <% if @dependent_classes.length == 0 %>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+          <th>Add</th>
+        <% else %>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+        <% end %>
       </tr>
       <tr>
-        <td><%= @independent_class_data.units %></td>
-        <td><%= @independent_class_data.grade_type %></td>
-        <td><%= @independent_class_data.restrictions %></td>
-        <td><%= @independent_class_data.impacted_class %></td>
-        <td><%= @independent_class_data.level %></td>
+        <% if @dependent_classes.length == 0 %>
+          <td><%= @independent_class_data.units %></td>
+          <td><%= @independent_class_data.grade_type %></td>
+          <td><%= @independent_class_data.restrictions %></td>
+          <td><%= @independent_class_data.impacted_class %></td>
+          <td><%= @independent_class_data.level %></td>
+          <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_class_id="<%= @independent_class_data.id %>">Add</button></td>
+        <% else %>
+          <td><%= @independent_class_data.units %></td>
+          <td><%= @independent_class_data.grade_type %></td>
+          <td><%= @independent_class_data.restrictions %></td>
+          <td><%= @independent_class_data.impacted_class %></td>
+          <td><%= @independent_class_data.level %></td>
+        <% end %>
       </tr>
     </table>
-    <% if !@dependent_classes.nil? %>
+    <% if @dependent_classes.length > 0 %>
       <table class="table">
         <tr>
           <th>Discussion Sections</th>
@@ -110,7 +132,8 @@
           </tr>
         <% end %>
       </table>
-    <% end %>
+    <% end %> 
+
     <button type="button" class="btn btn-primary" id="back-btn">Back</button>
   </div>
 </div>
