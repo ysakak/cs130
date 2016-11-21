@@ -1,1 +1,0 @@
-json.partial! "class_data/class_data", class_data: @class_data

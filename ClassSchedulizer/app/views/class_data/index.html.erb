@@ -12,14 +12,11 @@
   <tbody>
     <% @class_data.each do |class_data| %>
       <tr>
+        <td><%= class_data.course_id %> - <%= class_data.title %></td>
         <td><%= link_to 'Show', class_data %></td>
-        <td><%= link_to 'Edit', edit_class_data_path(class_data) %></td>
-        <td><%= link_to 'Destroy', class_data, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Class Data', new_class_data_path %>

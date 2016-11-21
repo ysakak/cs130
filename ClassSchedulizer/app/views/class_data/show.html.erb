@@ -1,4 +1,176 @@
-<p id="notice"><%= notice %></p>
+<div class="row col-md-10 col-md-offset-1">
+  <div id="class_details">
+    <div class="row">
+      <table class="table">
+        <tr>
+          <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
+        </tr>
+        <% if false %>
+        <tr>
+          <th>Day(s)</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Instructor(s)</th>
+          <th>Bruinwalk Rating</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td><%= @class_data.days %></td>
+          <td><%= @class_data.start_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
+          <td><%= @class_data.end_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
+          <td><%= @class_data.instructor %></td>
+          <td>Bruinwalk Rating</td>
+          <td>Details</td>
+        </tr>
+        <% end %>
+        <tr>
+          <th colspan=6>Description</th>
+        </tr>
+        <tr>
+          <td colspan=6><%= @class_data.description %></td>
+        </tr>
+        <tr>
+          <th colspan=6>Enrollment Information</th>
+        </tr>
+        <tr>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+          <th></th>
+        </tr>
+        <tr>
+          <td><%= @class_data.units %></td>
+          <td><%= @class_data.grade_type %></td>
+          <td><%= @class_data.restrictions %></td>
+          <td><%= @class_data.impacted_class %></td>
+          <td><%= @class_data.level %></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<% if false %>
+<p>
+  <strong>Lecture:</strong>
+  <%= @independent_class_data.lecture_id %>
+</p>
 
-<%= link_to 'Edit', edit_class_data_path(@class_data) %> |
-<%= link_to 'Back', class_data_index_path %>
+<p>
+  <strong>Class type:</strong>
+  <%= @independent_class_data.class_type %>
+</p>
+
+<p>
+  <strong>Section:</strong>
+  <%= @independent_class_data.section %>
+</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @independent_class_data.course_id %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @independent_class_data.title %>
+</p>
+
+<p>
+  <strong>Major:</strong>
+  <%= @independent_class_data.major %>
+</p>
+
+<p>
+  <strong>Major code:</strong>
+  <%= @independent_class_data.major_code %>
+</p>
+
+<p>
+  <strong>Term:</strong>
+  <%= @independent_class_data.term %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @independent_class_data.description %>
+</p>
+
+<p>
+  <strong>Days:</strong>
+  <%= @independent_class_data.days %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @independent_class_data.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @independent_class_data.end_time %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @independent_class_data.location %>
+</p>
+
+<p>
+  <strong>Units:</strong>
+  <%= @independent_class_data.units %>
+</p>
+
+<p>
+  <strong>Instructor:</strong>
+  <%= @independent_class_data.instructor %>
+</p>
+
+<p>
+  <strong>Final examination date:</strong>
+  <%= @independent_class_data.final_examination_date %>
+</p>
+
+<p>
+  <strong>Final examination day:</strong>
+  <%= @independent_class_data.final_examination_day %>
+</p>
+
+<p>
+  <strong>Final examination time:</strong>
+  <%= @independent_class_data.final_examination_time %>
+</p>
+
+<p>
+  <strong>Grade type:</strong>
+  <%= @independent_class_data.grade_type %>
+</p>
+
+<p>
+  <strong>Restrictions:</strong>
+  <%= @independent_class_data.restrictions %>
+</p>
+
+<p>
+  <strong>Impacted class:</strong>
+  <%= @independent_class_data.impacted_class %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @independent_class_data.level %>
+</p>
+
+<p>
+  <strong>Text book url:</strong>
+  <%= @independent_class_data.text_book_url %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @independent_class_data.url %>
+</p>
+
+<% end %>
