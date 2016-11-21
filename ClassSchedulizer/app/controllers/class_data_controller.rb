@@ -1,6 +1,7 @@
 class ClassDataController < ApplicationController
   def index
     @class_data = ClassData.search(params[:search])
+    @col_count = 6
   end
 
   def show
