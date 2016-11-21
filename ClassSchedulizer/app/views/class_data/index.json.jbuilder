@@ -1,0 +1,1 @@
+json.array! @class_data, partial: 'class_data/class_data', as: :class_data

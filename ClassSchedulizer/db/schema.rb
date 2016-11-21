@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161120060829) do
+ActiveRecord::Schema.define(version: 20161121022745) do
+
+  create_table "class_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string  "title"
+    t.string  "major"
+    t.string  "major_code"
+    t.string  "term"
+    t.text    "description",    limit: 65535
+    t.integer "units"
+    t.string  "grade_type"
+    t.string  "restrictions"
+    t.string  "impacted_class"
+    t.string  "level"
+  end
 
   create_table "dependent_class_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "class_id"

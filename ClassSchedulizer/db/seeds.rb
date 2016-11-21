@@ -12,6 +12,8 @@ require 'date'
 
 csv_independent_class = File.read(Rails.root.join('lib', 'seeds', 'independent_class_data.csv'))
 csv = CSV.parse(csv_independent_class, :headers => true, :encoding => 'UTF-8')
+class_data_title_set = Set.new
+
 csv.each do |row|
 	t = IndependentClassData.new
 	t.lecture_id = row['lecture_id']
@@ -60,6 +62,22 @@ csv.each do |row|
 
 	t.save
 	puts "#{t.title} saved"
+
+	if class_data_title_set.exclude?(row['title'])
+		s = ClassData.new
+		s.title = row['title']
+		s.major = row['major']
+		s.major_code = row['major_code']
+		s.term = row['term']
+		s.description = row['description']
+		s.units = row['units']
+		s.grade_type = row['grade_type']
+		s.restrictions = row['restrictions']
+		s.impacted_class = row['impacted_class']
+		s.level = row['level']
+		class_data_title_set << row['title']
+		s.save
+	end
 end
 
 csv_dependent_class = File.read(Rails.root.join('lib', 'seeds', 'dependent_class_data.csv'))
@@ -103,3 +121,4 @@ end
 
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
 puts "There are now #{DependentClassData.count} rows in the dependent class data table"
+puts "There are now #{ClassData.count} rows in the class data table"
