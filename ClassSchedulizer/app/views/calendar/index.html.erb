@@ -1,40 +1,40 @@
-<div id="calendar" class="col-md-10 offset-md-1"></div>
-<div id="search-box" class="col-md-10 offset-md-1">
-    <form id="search-form" method="get">
-        <div class="row">
-            <div class="col-md-3 offset-md-3">
-                <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
-            </div>
-            <div class="col-md-3">
-                <input type="submit" class="form-control col-md-2 offset-md-1" value="Search">
-            </div>
-        </div>
-    </form>
-</div>
-<div id="results" class="col-md-10 offset-md-1"></div>
+
+<html>
+  <body>
+    <div id="calendar-wrapper"></div>
+    <div id="search-box" class="col-md-10 offset-md-1">
+      <form id="search-form" method="get">
+          <div class="row">
+              <div class="col-md-3 offset-md-1">
+                  <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+              </div>
+              <div class="col-md-3 offset-md-1">
+                  <input type="submit" class="form-control" value="Search">
+              </div>
+              <div class="col-md-3 offset-md-1">
+                  <input type="submit" id="clear-calendar" class="form-control" value="Clear Calendar">
+              </div>
+          </div>
+      </form>
+  </div>
+  <div id="results" class="col-md-10 offset-md-1"></div>
+  </body>
+</html>
 
 <script>
-  var stateDataStack = [];
+var stateDataStack = [];
 
-  window.onload = function () {
-    var oTextbox = new AutoSuggestControl(document.getElementById("search"), new StateSuggestions());
-  }
-
-  //if ($('#calendar').is(':empty')) {
-    $('#calendar').fullCalendar({
-        handleWindowResize: true,
-        defaultDate: moment('2017-01-09'),
-        weekends: false,
-        header: false,
-        height: 501,
-        defaultView: "agendaWeek",
-        slotMinutes: 10,
-        minTime: "08:00:00",
-        maxTime: "20:00:00",
-        allDaySlot: false,
-        events: <%= @chosen_classes %>,
-    });
-  //}
+window.onload = function () {
+  var oTextbox = new AutoSuggestControl(document.getElementById("search"), new StateSuggestions());
+  $.ajax({
+    type: 'GET',
+    url: '/calendar/view',
+    success: function(data) {
+      $('#calendar-wrapper').html(data);
+      return false;
+    }
+  });
+}
 
 $('#search-form').submit(function(event) {
     event.preventDefault();
@@ -98,19 +98,31 @@ $(document.body).on("click", "#back-btn", function() {
 $(document.body).on("click", "#add-section-btn", function() {
     $.ajax({
         type: 'GET',
-        url: '/add_section',
+        url: '/calendar/view',
         dataType: 'html',
         data: {
-            id: $(this).attr('ind_class_id'),
-            discussion_id: $(this).attr('disc_id')
+            ind_class_id: $(this).attr('ind_class_id'),
+            disc_id: $(this).attr('disc_id'),
+            ind_class_ids: $('#ind_class_ids').val(),
+            disc_ids: $('#disc_ids').val()
         },
         success: function(data) {
-            $('#calendar').fullCalendar('rerenderEvents');
+            $('#calendar-wrapper').html(data);
             return false;
         }
     });
 });
 
+$(document.body).on("click", "#clear-calendar", function() {
+  $.ajax({
+        type: 'GET',
+        url: '/calendar/clear',
+        success: function(data) {
+            $('#calendar-wrapper').html(data);
+            return false;
+        }
+    });
+});
 </script>
 
 <style> 

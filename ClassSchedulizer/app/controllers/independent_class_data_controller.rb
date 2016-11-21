@@ -14,6 +14,10 @@ class IndependentClassDataController < ApplicationController
       @independent_class_data = IndependentClassData.find(params[:id])
       @dependent_classes = @independent_class_data.dependent_classes
     end
+
+    respond_to do |format|
+      format.js {render layout: false}
+    end
   end
 
   # GET /independent_class_data/new
