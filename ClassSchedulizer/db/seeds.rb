@@ -65,6 +65,7 @@ csv.each do |row|
 
 	if class_data_title_set.exclude?(row['title'])
 		s = ClassData.new
+		s.course_id = row['course_id']
 		s.title = row['title']
 		s.major = row['major']
 		s.major_code = row['major_code']
