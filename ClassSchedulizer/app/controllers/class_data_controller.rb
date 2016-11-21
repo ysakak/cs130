@@ -1,10 +1,12 @@
 class ClassDataController < ApplicationController
   def index
-    @class_data = ClassData.search(params[:search])
+    class_data_params = params.slice(:major)
+    if (class_data_params) 
+      @class_data = ClassData.where(major: class_data_params['major'])
+    else 
+      @class_data = ClassData.all
+    
 
-    respond_to do |format|
-    	format.html
-    	format.js
     end
 
     @col_count = 6

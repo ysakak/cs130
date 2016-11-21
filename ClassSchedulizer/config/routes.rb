@@ -12,4 +12,5 @@ Rails.application.routes.draw do
   root 'application#title'
 
   get '/calendar' => 'calendar#index'
+  get '/search' => 'class_data#index'
 end

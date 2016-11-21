@@ -19,6 +19,22 @@
     allDaySlot: false,
     events: <%= @chosen_classes %>,
   });
+
+$('#search-form').submit(function(event) {
+    event.preventDefault();
+    $.ajax({
+        type: 'GET',
+        url: '/search',
+        dataType: 'html',
+        data : {
+            major: $('#search').val()
+        },
+        success: function(data) {
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
 </script>
 
-<div id="results"></div>
+<div id="results" class="col-md-10 col-md-offset-1"></div>
