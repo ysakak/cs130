@@ -22,7 +22,7 @@ class IndependentClassData < ApplicationRecord
   end
 
   def format_time(time)
-    return time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M")
+    return time.strftime("%H:%M")
   end
 
   def as_json(options = {})
@@ -34,12 +34,4 @@ class IndependentClassData < ApplicationRecord
       :color => "green"
     }
   end
-
-	def self.search(search)
-		if search
-			self.where("major LIKE ?", "%#{search}%")
-		else
-			self.all
-		end
-	end
 end

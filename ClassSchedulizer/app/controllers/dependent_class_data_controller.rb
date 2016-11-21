@@ -21,46 +21,6 @@ class DependentClassDataController < ApplicationController
   def edit
   end
 
-  # POST /dependent_class_data
-  # POST /dependent_class_data.json
-  def create
-    @dependent_class_data = DependentClassData.new(dependent_class_data_params)
-
-    respond_to do |format|
-      if @dependent_class_data.save
-        format.html { redirect_to @dependent_class_data, notice: 'Dependent class datum was successfully created.' }
-        format.json { render :show, status: :created, location: @dependent_class_data }
-      else
-        format.html { render :new }
-        format.json { render json: @dependent_class_data.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /dependent_class_data/1
-  # PATCH/PUT /dependent_class_data/1.json
-  def update
-    respond_to do |format|
-      if @dependent_class_data.update(dependent_class_data_params)
-        format.html { redirect_to @dependent_class_data, notice: 'Dependent class datum was successfully updated.' }
-        format.json { render :show, status: :ok, location: @dependent_class_data }
-      else
-        format.html { render :edit }
-        format.json { render json: @dependent_class_data.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /dependent_class_data/1
-  # DELETE /dependent_class_data/1.json
-  def destroy
-    @dependent_class_data.destroy
-    respond_to do |format|
-      format.html { redirect_to dependent_class_data_url, notice: 'Dependent class datum was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dependent_class_data

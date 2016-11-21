@@ -43,13 +43,9 @@
         <td><%= dependent_class_data.instructor %></td>
         <td><%= dependent_class_data.url %></td>
         <td><%= link_to 'Show', dependent_class_data %></td>
-        <td><%= link_to 'Edit', edit_dependent_class_data_path(dependent_class_data) %></td>
-        <td><%= link_to 'Destroy', dependent_class_data, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Dependent Class Datum', new_dependent_class_data_path %>
