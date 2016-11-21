@@ -3,7 +3,7 @@
     <% if index % @col_count == 0 %>
       <div class="card-deck">
     <% end %>
-    <div class="card card-block card-outline-primary text-xs-center" onclick="location.href='<%= class_data_path(class_data) %>';">
+    <div class="card card-block card-outline-primary text-xs-center" id="<%= class_data.id %>">
       <h3 class="card-title"><%= class_data.course_id %></h3>
       <p class="card-text"><%= class_data.title %></p>
     </div>

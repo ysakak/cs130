@@ -37,6 +37,71 @@ $('#search-form').submit(function(event) {
         }
     });
 });
+
+$(document.body).on("click", ".card", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/class_data_search',
+        dataType: 'html',
+        data: {
+            id: $(this).attr('id'),
+            major: $('#search').val()
+        },
+        success: function(data) {
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
+
+$(document.body).on("click", "#back-to-major-btn", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/search',
+        dataType: 'html',
+        data: {
+            major: $(this).attr('major')
+        },
+        success: function(data) {
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
+
+$(document.body).on("click", "#independent-class-btn", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/independent_class_data_search',
+        dataType: 'html',
+        data: {
+            id: $(this).attr('independent_class_id'),
+            class_id: $(this).attr('class_id'),
+            major: $(this).attr('major')
+        },
+        success: function(data) {
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
+
+$(document.body).on("click", "#back-to-class-btn", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/class_data_search',
+        dataType: 'html',
+        data: {
+            id: $(this).attr('class_id'),
+            major: $(this).attr('major')
+        },
+        success: function(data) {
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
+
 </script>
 
 <div id="results" class="col-md-10 col-md-offset-1"></div>

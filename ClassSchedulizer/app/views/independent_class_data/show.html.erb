@@ -3,7 +3,7 @@
     <div class="row">
       <table class="table">
         <tr>
-          <th colspan=5><%= @independent_class_data.course_id %> - <%= @independent_class_data.title %></th>
+          <th colspan=5><%= @independent_class_data.id %><%= @independent_class_data.course_id %> - <%= @independent_class_data.title %></th>
         </tr>
         <tr>
           <th>Day(s)</th>
@@ -79,7 +79,7 @@
           <td><%= @independent_class_data.level %></td>
         </tr>
       </table>
-      <% if !@dependent_class.nil? %>
+      <% if !@dependent_classes.nil? %>
         <table class="table">
           <tr>
             <th>Discussion Sections</th>
@@ -110,6 +110,7 @@
           <% end %>
         </table>
       <% end %>
+      <button type="button" class="btn btn-primary" id="back-to-class-btn" class_id="<%= @class_id %>" major="<%= @major %>">Back</button>
     </div>
   </div>
 </div>

@@ -13,4 +13,6 @@ Rails.application.routes.draw do
 
   get '/calendar' => 'calendar#index'
   get '/search' => 'class_data#index'
+  get '/class_data_search' => 'class_data#show'
+  get '/independent_class_data_search' => 'independent_class_data#show'
 end
