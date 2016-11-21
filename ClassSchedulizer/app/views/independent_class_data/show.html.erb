@@ -89,6 +89,7 @@
           <th>Start Time</th>
           <th>End Time</th>
           <th>Instructor</th>
+          <th>Add</th>
         </tr>
         <% @dependent_classes.each do |dependent_class| %>
           <tr>
@@ -105,6 +106,7 @@
               <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
             <% end %>
             <td><%= dependent_class.instructor %></td>
+            <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_class_id="<%= @independent_class_data.id %>"  disc_id="<%= dependent_class.id %>">Add</button></td>
           </tr>
         <% end %>
       </table>

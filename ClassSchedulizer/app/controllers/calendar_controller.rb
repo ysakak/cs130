@@ -7,9 +7,23 @@ class CalendarController < ApplicationController
     (session[:chosen_classes] ||= []) << @class
     (session[:chosen_classes] ||= []) << @dependent_class
 
+    if (params[:id])
+      @new_class = IndependentClassData.find(params[:id])
+      (session[:chosen_classes] ||= []) << @new_class
+      logger.debug @class.title
+    end
+    if (params[:discussion_id])
+      @new_dependent_class = DependentClassData.find(params[:discussion_id])
+      (session[:chosen_classes] ||= []) << @new_dependent_class
+      logger.debug @dependent_class.section
+    end
+    
+    
+
     chosen_class_json_array = []
 
     for chosen_class in session[:chosen_classes]
+      logger.debug chosen_class
       chosen_class_json_array.push(chosen_class.as_json)
     end
 
