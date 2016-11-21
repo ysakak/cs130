@@ -112,7 +112,7 @@ class MajorData:
 
 def get_lecture_details():
     dir = os.path.dirname(__file__)
-    lecture_data_filename = os.path.join(dir, '../ClassSchedulizer/db/independent_class_data.csv')
+    lecture_data_filename = os.path.join(dir, '../ClassSchedulizer/lib/seeds/independent_class_data.csv')
     file = open(lecture_data_filename, 'r')
     reader = csv.reader(file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
     next(reader, None) # skip headers
@@ -128,7 +128,7 @@ def get_lecture_details():
 
 def generate_requisite_graphs():
     dir = os.path.dirname(__file__)
-    requisite_filename = os.path.join(dir, '../ClassSchedulizer/db/requisites.csv')
+    requisite_filename = os.path.join(dir, '../ClassSchedulizer/lib/seeds/requisites.csv')
     file = open(requisite_filename, 'r')
     reader = csv.reader(file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
     next(reader, None) # skip headers
@@ -285,7 +285,7 @@ def output_similarities_to_csv(output_file, similarities_matrix, id_lookup_table
     requisite_map, requisite_for_map = generate_requisite_graphs()
     os_dir = os.path.dirname(__file__)
     class_similarity_filename = os.path.join( \
-        os_dir, '../ClassSchedulizer/db/' + output_file)
+        os_dir, '../ClassSchedulizer/lib/seeds/' + output_file)
     class_similarity_file = open(class_similarity_filename, 'w')
     class_similarity_writer = csv.writer(class_similarity_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)

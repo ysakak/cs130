@@ -16,9 +16,6 @@ class ClassDataController < ApplicationController
     if (params[:id])
       @class_data = ClassData.find(params[:id])
       @independent_classes = @class_data.independent_classes
-      if (params[:major])
-        @major = params[:major]
-      end
     end
   end
 end

@@ -120,6 +120,17 @@ csv.each do |row|
 	puts "#{t.title} #{t.section} saved"
 end
 
+csv_class_similarity_file = File.read(Rails.root.join('lib', 'seeds', 'class_similarity.csv'))
+class_similarity_csv = CSV.parse(csv_class_similarity_file, :headers => true, :encoding => 'UTF-8')
+class_similarity_csv.each do |row|
+	t = ClassSimilarity.new
+	t.course_id = row['course_id']
+	t.similar_course_id = row['similar_course_id']
+	t.similarity = row['score']
+	t.save
+end
+
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
 puts "There are now #{DependentClassData.count} rows in the dependent class data table"
 puts "There are now #{ClassData.count} rows in the class data table"
+puts "There are now #{ClassSimilarity.count} rows in the class similarity table"

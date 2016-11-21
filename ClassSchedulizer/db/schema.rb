@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121030034) do
+ActiveRecord::Schema.define(version: 20161121200333) do
 
   create_table "class_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string  "title"
@@ -24,6 +24,14 @@ ActiveRecord::Schema.define(version: 20161121030034) do
     t.string  "impacted_class"
     t.string  "level"
     t.string  "course_id"
+  end
+
+  create_table "class_similarities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "course_id"
+    t.string   "similar_course_id"
+    t.float    "similarity",        limit: 24
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "dependent_class_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
