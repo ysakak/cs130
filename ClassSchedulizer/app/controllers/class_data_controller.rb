@@ -1,6 +1,12 @@
 class ClassDataController < ApplicationController
   def index
     @class_data = ClassData.search(params[:search])
+
+    respond_to do |format|
+    	format.html
+    	format.js
+    end
+
   end
 
   def show

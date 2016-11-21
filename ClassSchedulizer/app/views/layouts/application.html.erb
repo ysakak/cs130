@@ -12,11 +12,8 @@
   </head>
 
   <body>
-  	<%= form_tag(class_data_index_path, :method => "get", id: "search-form") do %>
-    <%= text_field_tag :search, params[:search], placeholder: "Search your major" %>
-    <%= submit_tag "Search", :name => nil %>
-	  <% end %>
 
     <%= yield %>
+
   </body>
 </html>

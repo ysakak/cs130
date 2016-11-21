@@ -1,0 +1,7 @@
+// $('#results').html("<%= j @class_data.pluck(:course_id).join('\n') %>")
+
+$('#results').html("<% @class_data.each do |class_data| %>" + 
+					"<button type='button' class='btn btn-primary'>" +
+					"<%= j link_to class_data.course_id, class_data %> <br> " + 
+					"</button>" +
+					"<% end %>")

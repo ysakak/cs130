@@ -2,6 +2,11 @@
 
 <h1>Class Data</h1>
 
+<%= form_tag(class_data_index_path, :method => "get", id: "search-form") do %>
+<%= text_field_tag :search, params[:search], placeholder: "Search your major" %>
+<%= submit_tag "Search", :name => nil %>
+<% end %>
+
 <table>
   <thead>
     <tr>
