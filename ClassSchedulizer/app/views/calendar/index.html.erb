@@ -1,9 +1,17 @@
-<div id="calendar"></div>
-
-<%= form_tag(class_data_index_path, :method => "get", id: "search-form", :remote => true) do %>
-<%= text_field_tag :search, params[:search], placeholder: "Search your major" %>
-<%= submit_tag "Search", :name => nil %>
-<% end %>
+<div id="calendar" class="col-md-10 offset-md-1"></div>
+<div id="search-box" class="col-md-10 offset-md-1">
+    <form id="search-form" method="get">
+        <div class="row">
+            <div class="col-md-3 offset-md-3">
+                <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="form-control col-md-2 offset-md-1" value="Search">
+            </div>
+        </div>
+    </form>
+</div>
+<div id="results" class="col-md-10 offset-md-1"></div>
 
 <script>
   window.onload = function () {
@@ -107,8 +115,6 @@ $(document.body).on("click", "#back-to-class-btn", function() {
 });
 
 </script>
-
-<div id="results" class="col-md-10 col-md-offset-1"></div>
 
 <style> 
 div.suggestions {
