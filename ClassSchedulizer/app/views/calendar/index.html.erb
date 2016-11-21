@@ -20,7 +20,7 @@
     var oTextbox = new AutoSuggestControl(document.getElementById("search"), new StateSuggestions());
   }
 
-  if ($('#calendar').is(':empty')) {
+  //if ($('#calendar').is(':empty')) {
     $('#calendar').fullCalendar({
         handleWindowResize: true,
         defaultDate: moment('2017-01-09'),
@@ -34,7 +34,7 @@
         allDaySlot: false,
         events: <%= @chosen_classes %>,
     });
-  }
+  //}
 
 $('#search-form').submit(function(event) {
     event.preventDefault();
@@ -93,6 +93,22 @@ $(document.body).on("click", "#back-btn", function() {
     var data = stateDataStack.pop();
     stateDataStack.push(data);
     $('#results').html(data);
+});
+
+$(document.body).on("click", "#add-section-btn", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/add_section',
+        dataType: 'html',
+        data: {
+            id: $(this).attr('ind_class_id'),
+            discussion_id: $(this).attr('disc_id')
+        },
+        success: function(data) {
+            $('#calendar').fullCalendar('rerenderEvents');
+            return false;
+        }
+    });
 });
 
 </script>

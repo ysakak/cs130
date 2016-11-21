@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   get '/search' => 'class_data#index'
   get '/class_data_search' => 'class_data#show'
   get '/independent_class_data_search' => 'independent_class_data#show'
+  get '/add_section' => 'calendar#index'
 end
