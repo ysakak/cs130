@@ -1,48 +1,51 @@
 <div id="class_details">
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
-      <table class="table">
-        <tr>
-          <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
-        </tr>
-        <tr>
-          <th colspan=6>Lectures</th>
-        </tr>
-        <tr>
-          <th>Day(s)</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Instructor(s)</th>
-          <th>Bruinwalk Rating</th>
-          <th></th>
-        </tr>
-
-        <% @independent_classes.each do |independent_class| %>
+      <table class="table table-fixed">
+        <thead>
           <tr>
-            <td><%= independent_class.days %></td>
-            <% if independent_class.start_time.nil? %>
-              <td>N/A</td>
-            <% else %>
-              <td><%= independent_class.start_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <% if independent_class.end_time.nil? %>
-              <td>N/A</td>
-            <% else %>
-              <td><%= independent_class.end_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <td><%= independent_class.instructor %></td>
-            <td>Bruinwalk Rating</td>
-            <td><%= link_to "Details", independent_class_data_path(independent_class) %></td>
+            <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
           </tr>
-        <% end %>
-        <tr>
-          <th colspan=6>Description</th>
-        </tr>
-        <tr>
-          <td colspan=6><%= @class_data.description %></td>
-        </tr>
+          <tr>
+            <th colspan=6>Lectures</th>
+          </tr>
+          <tr>
+            <th class="col-md-2">Day(s)</th>
+            <th class="col-md-2">Start Time</th>
+            <th class="col-md-2">End Time</th>
+            <th class="col-md-2">Instructor(s)</th>
+            <th class="col-md-2">Bruinwalk Rating</th>
+            <th class="col-md-2">Details</th>
+          </tr>
+        </thead>
+        <tbody class="lecture-data">
+          <% @independent_classes.each do |independent_class| %>
+            <tr>
+              <td class="col-md-2"><%= independent_class.days %></td>
+              <% if independent_class.start_time.nil? %>
+                <td class="col-md-2">N/A</td>
+              <% else %>
+                <td class="col-md-2"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+              <% end %>
+              <% if independent_class.end_time.nil? %>
+                <td class="col-md-2">N/A</td>
+              <% else %>
+                <td class="col-md-2"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+              <% end %>
+              <td class="col-md-2"><%= independent_class.instructor %></td>
+              <td class="col-md-2">Bruinwalk Rating</td>
+              <td class="col-md-2"><%= link_to "Details", independent_class_data_path(independent_class) %></td>
+            </tr>
+          <% end %>
+        </tbody>
       </table>
       <table class="table">
+        <tr>
+          <th colspan=5>Description</th>
+        </tr>
+        <tr>
+          <td colspan=5><%= @class_data.description %></td>
+        </tr>
         <tr>
           <th colspan=5>Enrollment Information</th>
         </tr>
@@ -64,3 +67,22 @@
     </div>
   </div>
 </div>
+
+<style>
+.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+
+.table-fixed td {
+  overflow: wrap;
+}
+
+</style>
