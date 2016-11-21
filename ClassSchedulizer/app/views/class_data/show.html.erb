@@ -20,8 +20,16 @@
         <% @independent_classes.each do |independent_class| %>
           <tr>
             <td><%= independent_class.days %></td>
-            <td><%= independent_class.start_time.strftime("%I:%M %P") %></td>
-            <td><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+            <% if independent_class.start_time.nil? %>
+              <td>N/A</td>
+            <% else %>
+              <td><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+            <% end %>
+            <% if independent_class.end_time.nil? %>
+              <td>N/A</td>
+            <% else %>
+              <td><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+            <% end %>
             <td><%= independent_class.instructor %></td>
             <td>Bruinwalk Rating</td>
             <td><%= link_to "Details", independent_class_data_path(independent_class) %></td>
