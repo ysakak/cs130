@@ -7,6 +7,8 @@ class ClassDataController < ApplicationController
     	format.js
     end
 
+    @col_count = 6
+
   end
 
   def show
