@@ -5,7 +5,9 @@
         <tr>
           <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
         </tr>
-        <% @independent_classes.each do |independent_class| %>
+        <tr>
+          <th colspan=6>Lectures</td>
+        </tr>
         <tr>
           <th>Day(s)</th>
           <th>Start Time</th>
@@ -14,14 +16,16 @@
           <th>Bruinwalk Rating</th>
           <th></th>
         </tr>
-        <tr>
-          <td><%= independent_class.days %></td>
-          <td><%= independent_class.start_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
-          <td><%= independent_class.end_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
-          <td><%= independent_class.instructor %></td>
-          <td>Bruinwalk Rating</td>
-          <td><%= link_to "Details", independent_class_data_path(independent_class) %></td>
-        </tr>
+
+        <% @independent_classes.each do |independent_class| %>
+          <tr>
+            <td><%= independent_class.days %></td>
+            <td><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+            <td><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+            <td><%= independent_class.instructor %></td>
+            <td>Bruinwalk Rating</td>
+            <td><%= link_to "Details", independent_class_data_path(independent_class) %></td>
+          </tr>
         <% end %>
         <tr>
           <th colspan=6>Description</th>

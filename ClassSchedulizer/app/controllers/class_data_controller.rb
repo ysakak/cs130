@@ -5,6 +5,6 @@ class ClassDataController < ApplicationController
 
   def show
     @class_data = ClassData.find(params[:id])
-    @independent_classes = IndependentClassData.where(title: @class_data.title)
+    @independent_classes = @class_data.independent_classes
   end
 end

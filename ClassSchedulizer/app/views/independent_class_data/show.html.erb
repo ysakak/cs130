@@ -1,122 +1,97 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Lecture:</strong>
-  <%= @independent_class_data.lecture_id %>
-</p>
-
-<p>
-  <strong>Class type:</strong>
-  <%= @independent_class_data.class_type %>
-</p>
-
-<p>
-  <strong>Section:</strong>
-  <%= @independent_class_data.section %>
-</p>
-
-<p>
-  <strong>Course:</strong>
-  <%= @independent_class_data.course_id %>
-</p>
-
-<p>
-  <strong>Title:</strong>
-  <%= @independent_class_data.title %>
-</p>
-
-<p>
-  <strong>Major:</strong>
-  <%= @independent_class_data.major %>
-</p>
-
-<p>
-  <strong>Major code:</strong>
-  <%= @independent_class_data.major_code %>
-</p>
-
-<p>
-  <strong>Term:</strong>
-  <%= @independent_class_data.term %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @independent_class_data.description %>
-</p>
-
-<p>
-  <strong>Days:</strong>
-  <%= @independent_class_data.days %>
-</p>
-
-<p>
-  <strong>Start time:</strong>
-  <%= @independent_class_data.start_time %>
-</p>
-
-<p>
-  <strong>End time:</strong>
-  <%= @independent_class_data.end_time %>
-</p>
-
-<p>
-  <strong>Location:</strong>
-  <%= @independent_class_data.location %>
-</p>
-
-<p>
-  <strong>Units:</strong>
-  <%= @independent_class_data.units %>
-</p>
-
-<p>
-  <strong>Instructor:</strong>
-  <%= @independent_class_data.instructor %>
-</p>
-
-<p>
-  <strong>Final examination date:</strong>
-  <%= @independent_class_data.final_examination_date %>
-</p>
-
-<p>
-  <strong>Final examination day:</strong>
-  <%= @independent_class_data.final_examination_day %>
-</p>
-
-<p>
-  <strong>Final examination time:</strong>
-  <%= @independent_class_data.final_examination_time %>
-</p>
-
-<p>
-  <strong>Grade type:</strong>
-  <%= @independent_class_data.grade_type %>
-</p>
-
-<p>
-  <strong>Restrictions:</strong>
-  <%= @independent_class_data.restrictions %>
-</p>
-
-<p>
-  <strong>Impacted class:</strong>
-  <%= @independent_class_data.impacted_class %>
-</p>
-
-<p>
-  <strong>Level:</strong>
-  <%= @independent_class_data.level %>
-</p>
-
-<p>
-  <strong>Text book url:</strong>
-  <%= @independent_class_data.text_book_url %>
-</p>
-
-<p>
-  <strong>Url:</strong>
-  <%= @independent_class_data.url %>
-</p>
-
+<div class="row col-md-10 col-md-offset-1">
+  <div id="independent_class_details">
+    <div class="row">
+      <table class="table">
+        <tr>
+          <th colspan=5><%= @independent_class_data.course_id %> - <%= @independent_class_data.title %></th>
+        </tr>
+        <tr>
+          <th>Day(s)</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Location</th>
+          <th>Instructor(s)</th>
+        </tr>
+        <tr>
+          <td><%= @independent_class_data.days %></td>
+          <td><%= @independent_class_data.start_time.strftime("%I:%M %P") %></td>
+          <td><%= @independent_class_data.end_time.strftime("%I:%M %P") %></td>
+          <td><%= @independent_class_data.location %></td>
+          <td><%= @independent_class_data.instructor %></td>
+        </tr>
+        <tr>
+          <th colspan = 5>Bruinwalk Rating</th>
+        </tr>
+        <tr>
+          <th>Overall</th>
+          <th>Easiness</th>
+          <th>Workload</th>
+          <th>Clarity</th>
+          <th>Helpfulness</th>
+        </tr>
+        <tr>
+          <td>5.0</td>
+          <td>5.0</td>
+          <td>5.0</td>
+          <td>5.0</td>
+          <td>5.0</td>
+        </tr>
+        <tr>
+          <th colspan = 5>Final Exam Information</th>
+        </tr>
+        <tr>
+          <th>Date</th>
+          <th>Day</th>
+          <th>Time</th>
+          <th colspan=2></th>
+        </tr>
+        <tr>
+          <td><%= @independent_class_data.final_examination_date %></td>
+          <td><%= @independent_class_data.final_examination_day %></td>
+          <td><%= @independent_class_data.final_examination_time %></td>
+          <td colspan=2></td>
+        </tr>
+      </table>
+      <table class="table">
+        <tr>
+          <th colspan=5>Enrollment Information</th>
+        </tr>
+        <tr>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+        </tr>
+        <tr>
+          <td><%= @independent_class_data.units %></td>
+          <td><%= @independent_class_data.grade_type %></td>
+          <td><%= @independent_class_data.restrictions %></td>
+          <td><%= @independent_class_data.impacted_class %></td>
+          <td><%= @independent_class_data.level %></td>
+        </tr>
+      </table>
+      <table class="table">
+        <tr>
+          <th>Discussion Sections</th>
+        </tr>
+        <tr>
+          <th>Section</th>
+          <th>Day(s)</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Instructor</th>
+        </tr>
+        <% @dependent_classes.each do |dependent_class| %>
+          <tr>
+            <td><%= dependent_class.section %></td>
+            <td><%= dependent_class.days %></td>
+            <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
+            <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
+            <td><%= dependent_class.instructor %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

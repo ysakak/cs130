@@ -10,6 +10,8 @@ class IndependentClassDataController < ApplicationController
   # GET /independent_class_data/1
   # GET /independent_class_data/1.json
   def show
+    @independent_class_data = IndependentClassData.find(params[:id])
+    @dependent_classes = @independent_class_data.dependent_classes
   end
 
   # GET /independent_class_data/new
