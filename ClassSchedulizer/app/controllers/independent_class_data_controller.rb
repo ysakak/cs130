@@ -17,50 +17,6 @@ class IndependentClassDataController < ApplicationController
     @independent_class_data = IndependentClassData.new
   end
 
-  # GET /independent_class_data/1/edit
-  def edit
-  end
-
-  # POST /independent_class_data
-  # POST /independent_class_data.json
-  def create
-    @independent_class_data = IndependentClassData.new(independent_class_data_params)
-
-    respond_to do |format|
-      if @independent_class_data.save
-        format.html { redirect_to @independent_class_data, notice: 'Independent class datum was successfully created.' }
-        format.json { render :show, status: :created, location: @independent_class_data }
-      else
-        format.html { render :new }
-        format.json { render json: @independent_class_data.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /independent_class_data/1
-  # PATCH/PUT /independent_class_data/1.json
-  def update
-    respond_to do |format|
-      if @independent_class_data.update(independent_class_data_params)
-        format.html { redirect_to @independent_class_data, notice: 'Independent class datum was successfully updated.' }
-        format.json { render :show, status: :ok, location: @independent_class_data }
-      else
-        format.html { render :edit }
-        format.json { render json: @independent_class_data.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /independent_class_data/1
-  # DELETE /independent_class_data/1.json
-  def destroy
-    @independent_class_data.destroy
-    respond_to do |format|
-      format.html { redirect_to independent_class_data_url, notice: 'Independent class datum was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_independent_class_data

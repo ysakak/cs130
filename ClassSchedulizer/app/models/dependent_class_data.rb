@@ -21,7 +21,7 @@ class DependentClassData < ApplicationRecord
   end
 
   def format_time(time)
-    return time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M")
+    return time.strftime("%H:%M")
   end
 
   def as_json(options = {})
