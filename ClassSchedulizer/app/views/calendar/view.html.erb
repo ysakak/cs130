@@ -1,0 +1,19 @@
+<div id="calendar" class="col-md-10 offset-md-1"></div>
+
+<script>
+    //if ($('#calendar').is(':empty')) {
+        $('#calendar').fullCalendar({
+            handleWindowResize: true,
+            defaultDate: moment('2017-01-09'),
+            weekends: false,
+            header: false,
+            height: 501,
+            defaultView: "agendaWeek",
+            slotMinutes: 10,
+            minTime: "08:00:00",
+            maxTime: "20:00:00",
+            allDaySlot: false,
+            events: <%= @chosen_classes %>,
+        });
+    //}
+</script>

@@ -1,0 +1,2 @@
+class ClassSimilarityController < ApplicationController
+end
