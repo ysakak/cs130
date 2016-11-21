@@ -16,5 +16,6 @@
 //= require_tree .
 //= require moment 
 //= require fullcalendar
+//= require twitter/bootstrap
 
 $('#calendar').fullCalendar({});
