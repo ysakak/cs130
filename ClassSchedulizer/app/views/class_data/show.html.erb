@@ -5,22 +5,22 @@
         <tr>
           <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
         </tr>
-        <% if false %>
+        <% @independent_classes.each do |independent_class| %>
         <tr>
           <th>Day(s)</th>
           <th>Start Time</th>
           <th>End Time</th>
           <th>Instructor(s)</th>
           <th>Bruinwalk Rating</th>
-          <th>Details</th>
+          <th></th>
         </tr>
         <tr>
-          <td><%= @class_data.days %></td>
-          <td><%= @class_data.start_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
-          <td><%= @class_data.end_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
-          <td><%= @class_data.instructor %></td>
+          <td><%= independent_class.days %></td>
+          <td><%= independent_class.start_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
+          <td><%= independent_class.end_time.in_time_zone('Pacific Time (US & Canada)').strftime("%H:%M %P") %></td>
+          <td><%= independent_class.instructor %></td>
           <td>Bruinwalk Rating</td>
-          <td>Details</td>
+          <td><%= link_to "Details", independent_class_data_path(independent_class) %></td>
         </tr>
         <% end %>
         <tr>
@@ -29,8 +29,10 @@
         <tr>
           <td colspan=6><%= @class_data.description %></td>
         </tr>
+      </table>
+      <table class="table">
         <tr>
-          <th colspan=6>Enrollment Information</th>
+          <th colspan=5>Enrollment Information</th>
         </tr>
         <tr>
           <th>Units</th>
@@ -38,7 +40,6 @@
           <th>Restrictions</th>
           <th>Impacted</th>
           <th>Level</th>
-          <th></th>
         </tr>
         <tr>
           <td><%= @class_data.units %></td>
@@ -46,7 +47,6 @@
           <td><%= @class_data.restrictions %></td>
           <td><%= @class_data.impacted_class %></td>
           <td><%= @class_data.level %></td>
-          <td></td>
         </tr>
       </table>
     </div>
