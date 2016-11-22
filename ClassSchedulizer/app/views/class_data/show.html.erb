@@ -1,7 +1,13 @@
 <div id="class_details">
   <div class="row">
+    <table class="table">
+      <tr>
+        <th><%= @class_data.course_id %> - <%= @class_data.title %></th>
+      </tr>
+    </table>
     <ul class="nav nav-tabs" data-tabs="tabs">
       <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#details" role="tab">Details</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lectures" role="tab">Lectures</a></li>
       <% if @has_similar_classes %>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#similar-classes" role="tab">Similar Classes</a></li>
       <% end %>
@@ -9,11 +15,35 @@
   </div>
   <div class="tab-content">
     <div class="row tab-pane active" id="details">
-      <table class="table table-fixed">
+      <table class="table">
+        <tr>
+          <th colspan=5>Description</th>
+        </tr>
+        <tr>
+          <td colspan=5><%= @class_data.description %></td>
+        </tr>
+        <tr>
+          <th colspan=5>Enrollment Information</th>
+        </tr>
+        <tr>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+        </tr>
+        <tr>
+          <td><%= @class_data.units %></td>
+          <td><%= @class_data.grade_type %></td>
+          <td><%= @class_data.restrictions %></td>
+          <td><%= @class_data.impacted_class %></td>
+          <td><%= @class_data.level %></td>
+        </tr>
+      </table>
+    </div>
+    <div class="row tab-pane" id="lectures">
+      <table class="table">
         <thead>
-          <tr>
-            <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
-          </tr>
           <tr>
             <th colspan=6>Lectures</th>
           </tr>
@@ -49,39 +79,10 @@
           <% end %>
         </tbody>
       </table>
-      <table class="table">
-        <tr>
-          <th colspan=5>Description</th>
-        </tr>
-        <tr>
-          <td colspan=5><%= @class_data.description %></td>
-        </tr>
-        <tr>
-          <th colspan=5>Enrollment Information</th>
-        </tr>
-        <tr>
-          <th>Units</th>
-          <th>Grade Type</th>
-          <th>Restrictions</th>
-          <th>Impacted</th>
-          <th>Level</th>
-        </tr>
-        <tr>
-          <td><%= @class_data.units %></td>
-          <td><%= @class_data.grade_type %></td>
-          <td><%= @class_data.restrictions %></td>
-          <td><%= @class_data.impacted_class %></td>
-          <td><%= @class_data.level %></td>
-        </tr>
-      </table>
-      <button type="button" class="btn btn-primary" id="back-btn" major="<%= @major %>">Back</button>
     </div>
     <div class="tab-pane" id="similar-classes">
       <% if @has_similar_classes %>
         <table class="table">
-          <tr>
-            <th colspan=3><%= @class_data.course_id %> - <%= @class_data.title %></th>
-          </tr>
           <tr>
             <th>Course Title</th>
             <th>Description</th>
@@ -97,23 +98,8 @@
         </table>
       <% end %>
     </div>
+    <div id="class-data-footer">
+      <button type="button" class="btn btn-primary" id="back-btn" major="<%= @major %>">Back</button>
+    </div>
   </div>
 </div>
-
-<style>
-.table-fixed thead {
-  width: 97%;
-}
-.table-fixed tbody {
-  max-height: 250px;
-  overflow-y: auto;
-  width: 100%;
-}
-.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
-  display: block;
-}
-
-.table-fixed td {
-  overflow: wrap;
-}
-</style>
