@@ -31,6 +31,7 @@ class IndependentClassData < ApplicationRecord
 
     if !self.start_time.nil?
       {
+        :id => self.lecture_id,
         :title => self.title,
         :start => format_time(self.start_time),
         :end => format_time(self.end_time),

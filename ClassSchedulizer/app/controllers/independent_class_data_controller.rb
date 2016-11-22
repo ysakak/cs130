@@ -24,6 +24,27 @@ class IndependentClassDataController < ApplicationController
     @independent_class_data = IndependentClassData.new
   end
 
+  def show_selected
+    @independent_classes = []
+    @dependent_classes = []
+
+    if (params[:independent_ids])
+      independent_id_array = params[:independent_ids].split(',')
+      for independent_id in independent_id_array
+        @independent_classes.push(IndependentClassData.find_by(:lecture_id => independent_id))
+      end
+    end
+
+    if (params[:dependent_ids])
+      dependent_id_array = params[:dependent_ids].split(',')
+      for dependent_id in dependent_id_array
+        @dependent_classes.push(DependentClassData.find_by(:class_id => dependent_id))
+      end
+    end
+
+    render layout: false
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_independent_class_data

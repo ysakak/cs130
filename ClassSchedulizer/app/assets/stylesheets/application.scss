@@ -13,3 +13,68 @@
  */
  @import "fullcalendar";
  @import "bootstrap";
+
+div.suggestions {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid black;
+    position: absolute;  
+    background-color: #FFFFFF; 
+}
+
+div.suggestions div {
+    cursor: default;
+    padding: 0px 3px;
+}
+
+div.suggestions div.current {
+    background-color: #3366cc;
+    color: white;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Regular'), 
+       local('Roboto-Regular'), 
+       url(http://themes.googleusercontent.com/static/fonts/roboto/v11/2UX7WLTfW3W8TclTUvlFyQ.woff) 
+       format('woff');
+}
+
+div.tile-header {
+  margin-top: 20px !important;
+  margin-bottom: 1px !important;
+  font-size: 24pt;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+div.tile {
+  margin-top: 1px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+}
+
+div#results {
+  margin-top: 10px;
+  padding: 0;
+  box-shadow: none;
+  margin-bottom: 100px;
+  background-color: #F5F5F5;
+}
+
+div#clear-calendar {
+  position:relative;
+  width: 25%;
+  left:37.5%;
+}
+
+div#content {
+  background-color: #F5F5F5;
+  min-height: 1080px;
+}

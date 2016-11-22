@@ -29,6 +29,7 @@ class DependentClassData < ApplicationRecord
 
     if !self.start_time.nil?
       {
+        :id => self.class_id,
         :title => self.title,
         :start => format_time(self.start_time),
         :end => format_time(self.end_time),

@@ -1,157 +1,224 @@
-<div id="independent_class_details" class="m-x-auto">
+<div id="independent-class-header">
+  <%= @independent_class_data.course_id %> - <%= @independent_class_data.title %>
+</div>
+<div id="independent-class-details">
   <div class="row">
-    <table class="table">
-      <tr>
-        <th colspan=5><%= @independent_class_data.course_id %> - <%= @independent_class_data.title %></th>
-      </tr>
-      <tr>
-        <th>Day(s)</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Location</th>
-        <th>Instructor(s)</th>
-      </tr>
-      <tr>
-        <td><%= @independent_class_data.days %></td>
-        <% if @independent_class_data.start_time.nil? %>
-            <td>N/A</td>
-          <% else %>
-            <td><%= @independent_class_data.start_time.strftime("%I:%M %P") %></td>
-          <% end %>
-          <% if @independent_class_data.end_time.nil? %>
-            <td>N/A</td>
-          <% else %>
-            <td><%= @independent_class_data.end_time.strftime("%I:%M %P") %></td>
-          <% end %>
-        <td><%= @independent_class_data.location %></td>
-        <td><%= @independent_class_data.instructor %></td>
-      </tr>
-      <tr>
-        <th colspan = 5>Bruinwalk Rating</th>
-      </tr>
-      <tr>
-        <th>Overall</th>
-        <th>Easiness</th>
-        <th>Workload</th>
-        <th>Clarity</th>
-        <th>Helpfulness</th>
-      </tr>
-      <tr>
-        <td>5.0</td>
-        <td>5.0</td>
-        <td>5.0</td>
-        <td>5.0</td>
-        <td>5.0</td>
-      </tr>
-      <tr>
-        <th colspan = 5>Final Exam Information</th>
-      </tr>
-      <tr>
-        <th>Date</th>
-        <th>Day</th>
-        <th>Time</th>
-        <th colspan=2></th>
-      </tr>
-      <tr>
-        <td><%= @independent_class_data.final_examination_date %></td>
-        <td><%= @independent_class_data.final_examination_day %></td>
-        <td><%= @independent_class_data.final_examination_time %></td>
-        <td colspan=2></td>
-      </tr>
-    </table>
-    <table class="table">
-      <tr>
-        <% if @dependent_classes.length == 0 %>
-          <th colspan=6>Enrollment Information</th>
-        <% else %>
-          <th colspan=5>Enrollment Information</th>
-        <% end %>
-      </tr>
-      <tr>
-        <% if @dependent_classes.length == 0 %>
-          <th>Units</th>
-          <th>Grade Type</th>
-          <th>Restrictions</th>
-          <th>Impacted</th>
-          <th>Level</th>
-          <th>Add</th>
-        <% else %>
-          <th>Units</th>
-          <th>Grade Type</th>
-          <th>Restrictions</th>
-          <th>Impacted</th>
-          <th>Level</th>
-        <% end %>
-      </tr>
-      <tr>
-        <% if @dependent_classes.length == 0 %>
-          <td><%= @independent_class_data.units %></td>
-          <td><%= @independent_class_data.grade_type %></td>
-          <td><%= @independent_class_data.restrictions %></td>
-          <td><%= @independent_class_data.impacted_class %></td>
-          <td><%= @independent_class_data.level %></td>
-          <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>'>Add</button></td>
-        <% else %>
-          <td><%= @independent_class_data.units %></td>
-          <td><%= @independent_class_data.grade_type %></td>
-          <td><%= @independent_class_data.restrictions %></td>
-          <td><%= @independent_class_data.impacted_class %></td>
-          <td><%= @independent_class_data.level %></td>
-        <% end %>
-      </tr>
-      <tr>
-        <th colspan=6>Requisites</th>
-      </tr>
-      <tr>
-        <% if @requisites.length == 0 %>
-          <td>None</td>
-        <% else %>
-          <% @requisites.each do |requisite| %>
-            <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
-              <td><%= requisite.requisite_course_id_1 %></td>
-            <% else %>
-              <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
-            <% end %>
-          <% end %>
-        <% end %>
-
-      </tr>
-
-
-    </table>
-    <% if @dependent_classes.length > 0 %>
-      <table class="table">
-        <tr>
-          <th>Discussion Sections</th>
-        </tr>
-        <tr>
-          <th>Section</th>
-          <th>Day(s)</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Instructor</th>
-          <th>Add</th>
-        </tr>
-        <% @dependent_classes.each do |dependent_class| %>
+    <ul class="nav nav-tabs col-md-10 offset-md-1" data-tabs="tabs">
+      <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#details" role="tab">Details</a></li>
+      <% if @dependent_classes.length > 0 %>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#dependent_classes" role="tab">Discussions</a></li>
+      <% end %>
+      <% if true %>
+      <%# TODO swap to check if bruinwalk ratings exist later %>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#bruinwalk" role="tab">Bruinwalk Ratings</a></li>
+      <% end %>
+    </ul>
+    <div class="tab-content col-md-10 offset-md-1">
+      <div class="tab-pane active" id="details">
+        <table class="table">
           <tr>
-            <td><%= dependent_class.section %></td>
-            <td><%= dependent_class.days %></td>
-            <% if dependent_class.start_time.nil? %>
-              <td>N/A</td>
-            <% else %>
-              <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <% if dependent_class.end_time.nil? %>
-              <td>N/A</td>
-            <% else %>
-              <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <td><%= dependent_class.instructor %></td>
-            <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>'  dep_json='<%= dependent_class.as_json.to_json.html_safe %>'>Add</button></td>
+            <th colspan=5></th>
           </tr>
+          <tr>
+            <th>Day(s)</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Location</th>
+            <th>Instructor(s)</th>
+          </tr>
+          <tr>
+            <td><%= @independent_class_data.days %></td>
+            <% if @independent_class_data.start_time.nil? %>
+                <td>N/A</td>
+              <% else %>
+                <td><%= @independent_class_data.start_time.strftime("%I:%M %P") %></td>
+              <% end %>
+              <% if @independent_class_data.end_time.nil? %>
+                <td>N/A</td>
+              <% else %>
+                <td><%= @independent_class_data.end_time.strftime("%I:%M %P") %></td>
+              <% end %>
+            <td><%= @independent_class_data.location %></td>
+            <td><%= @independent_class_data.instructor %></td>
+          </tr>
+          <tr>
+            <th colspan = 5>Final Exam Information</th>
+          </tr>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th colspan=2></th>
+          </tr>
+          <tr>
+            <td><%= @independent_class_data.final_examination_date %></td>
+            <td><%= @independent_class_data.final_examination_day %></td>
+            <td><%= @independent_class_data.final_examination_time %></td>
+            <td colspan=2></td>
+          </tr>
+        </table>
+        <table class="table">
+          <tr>
+            <% if @dependent_classes.length == 0 %>
+              <th colspan=6>Enrollment Information</th>
+            <% else %>
+              <th colspan=5>Enrollment Information</th>
+            <% end %>
+          </tr>
+          <tr>
+            <% if @dependent_classes.length == 0 %>
+              <th>Units</th>
+              <th>Grade Type</th>
+              <th>Restrictions</th>
+              <th>Impacted</th>
+              <th>Level</th>
+              <th>Add</th>
+            <% else %>
+              <th>Units</th>
+              <th>Grade Type</th>
+              <th>Restrictions</th>
+              <th>Impacted</th>
+              <th>Level</th>
+            <% end %>
+          </tr>
+          <tr>
+            <% if @dependent_classes.length == 0 %>
+              <td><%= @independent_class_data.units %></td>
+              <td><%= @independent_class_data.grade_type %></td>
+              <td><%= @independent_class_data.restrictions %></td>
+              <td><%= @independent_class_data.impacted_class %></td>
+              <td><%= @independent_class_data.level %></td>
+              <td>
+                <input type="submit" id="add-section-btn" class="form-control" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>' value="Add">
+              </td>
+            <% else %>
+              <td><%= @independent_class_data.units %></td>
+              <td><%= @independent_class_data.grade_type %></td>
+              <td><%= @independent_class_data.restrictions %></td>
+              <td><%= @independent_class_data.impacted_class %></td>
+              <td><%= @independent_class_data.level %></td>
+            <% end %>
+          </tr>
+          <tr>
+            <th colspan=6>Requisites</th>
+          </tr>
+          <tr>
+            <% if @requisites.length == 0 %>
+              <td>None</td>
+            <% else %>
+              <% @requisites.each do |requisite| %>
+                <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
+                  <td><%= requisite.requisite_course_id_1 %></td>
+                <% else %>
+                  <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tr>
+        </table>
+      </div>
+      <div class="tab-pane" id="dependent_classes">
+        <% if @dependent_classes.length > 0 %>
+          <table class="table">
+            <tr>
+              <th>Discussion Sections</th>
+            </tr>
+            <tr>
+              <th>Section</th>
+              <th>Day(s)</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Instructor</th>
+              <th>Add</th>
+            </tr>
+            <% @dependent_classes.each do |dependent_class| %>
+              <tr>
+                <td><%= dependent_class.section %></td>
+                <td><%= dependent_class.days %></td>
+                <% if dependent_class.start_time.nil? %>
+                  <td>N/A</td>
+                <% else %>
+                  <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
+                <% end %>
+                <% if dependent_class.end_time.nil? %>
+                  <td>N/A</td>
+                <% else %>
+                  <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
+                <% end %>
+                <td><%= dependent_class.instructor %></td>
+                <td>
+                  <input type="submit" id="add-section-btn" class="form-control" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>'  dep_json='<%= dependent_class.as_json.to_json.html_safe %>' value="Add">
+                </td>
+              </tr>
+            <% end %>
+          </table>
         <% end %>
-      </table>
-    <% end %> 
-    <button type="button" class="btn btn-primary" id="back-btn">Back</button>
+      </div>
+      <div class="tab-pane" id="bruinwalk">
+        <% if true %>
+          <table class="table">
+            <tr>
+              <th colspan = 5>Bruinwalk Rating</th>
+            </tr>
+            <tr>
+              <th>Overall</th>
+              <th>Easiness</th>
+              <th>Workload</th>
+              <th>Clarity</th>
+              <th>Helpfulness</th>
+            </tr>
+            <tr>
+              <td>5.0</td>
+              <td>5.0</td>
+              <td>5.0</td>
+              <td>5.0</td>
+              <td>5.0</td>
+            </tr>
+          </table>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
+<div id="independent-class-footer">
+  <input type="submit" id="back-btn" class="form-control" value="Back">
+</div>
+
+<style>
+
+div#independent-class-header {
+  margin-top: 10px;
+  margin-bottom: 1px;
+  background-color: #FFFFFF;
+  font-size: 24pt;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+}
+
+div#independent-class-details {
+  margin-bottom: 0px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+}
+
+div#independent-class-footer {
+  margin-top: 1px;
+  margin-bottom: 20px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+}
+
+input#back-btn {
+  position:relative;
+  width: 25%;
+  left:37.5%;
+}
+
+</style>

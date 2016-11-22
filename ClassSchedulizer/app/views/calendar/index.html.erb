@@ -1,28 +1,41 @@
-
-<html>
-  <body>
-    <div id="calendar-wrapper"></div>
-    <div id="search-box" class="col-md-10 offset-md-1">
-      <form id="search-form" method="get">
-          <div class="row">
-              <div class="col-md-3 offset-md-1">
-                  <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
-              </div>
-              <div class="col-md-3 offset-md-1">
-                  <input type="submit" class="form-control" value="Search">
-              </div>
-              <div class="col-md-3 offset-md-1">
-                  <input type="submit" id="clear-calendar" class="form-control" value="Clear Calendar">
-              </div>
-          </div>
-      </form>
+<div class="row" id="content">
+  <div id="calendar-title" class="tile tile-header col-md-10 offset-md-1">Calendar</div>
+  <div id="calendar-wrapper" class="tile col-md-10 offset-md-1"></div>
+  <div id="calendar-footer" class="tile col-md-10 offset-md-1">
+    <div id="calendar-options">
+      <div class="row">
+        <div id="clear-calendar">
+            <input type="submit" id="clear-calendar" class="form-control" value="Clear Calendar">
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="results" class="col-md-10 offset-md-1"></div>
-  </body>
-</html>
+  <div id="selected-classes-title" style="visibility: hidden">
+    Selected Classes
+  </div>
+  <div id="selected-classes" style="visibility: hidden"></div>
+  <div id="search-box-title" class="tile tile-header col-md-10 offset-md-1">Search</div>
+  <div id="search-box" class="tile col-md-10 offset-md-1">
+    <div class="row">
+      <form id="search-form" method="get">
+        <div class="col-md-4 offset-md-2">
+            <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+        </div>
+        <div class="col-md-3 offset-md-1">
+            <input type="submit" class="form-control" value="Search">
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="results" class="tile col-md-10 offset-md-1"></div>
+</div>
 
 <script>
 var stateDataStack = [];
+var selectedIndependentClassIds = [];
+var selectedDependentClassIds = [];
+var classDict = {};
+var classToEventIdDict = {};
 
 window.onload = function () {
   var oTextbox = new AutoSuggestControl(document.getElementById("search"), new StateSuggestions());
@@ -109,30 +122,114 @@ $(document.body).on("click", "#back-btn", function() {
 });
 
 $(document.body).on("click", "#add-section-btn", function() {
-    $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('ind_json')), 'stick');
+  $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('ind_json')), 'stick');
+
+  $('#selected-classes-title').addClass("tile tile-header col-md-10 offset-md-1");
+  $('#selected-classes-title').removeAttr("style");
+
+  $('#selected-classes').addClass("tile col-md-10 offset-md-1");
+  $('#selected-classes').removeAttr("style");
+
+  var ind_id = JSON.parse($(this).attr('ind_json'))['id'];
+  selectedIndependentClassIds.push(ind_id);
+
+  if ($(this).attr('dep_json') !== undefined) {
     $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('dep_json')), 'stick');
+    var dep_id = JSON.parse($(this).attr('dep_json'))['id'];
+    selectedDependentClassIds.push(dep_id);
+    classDict[ind_id] = dep_id;
+  }
+
+  if (selectedDependentClassIds.length == 0) {
+    $.ajax({
+      type: 'GET',
+      url: '/independent_class_data_show_selected',
+      dataType: 'html',
+      data: {
+          independent_ids: selectedIndependentClassIds.join()
+      },
+      success: function(data) {
+          $('#selected-classes').html(data);
+          return false;
+      }
+    });
+  } else {
+    $.ajax({
+      type: 'GET',
+      url: '/independent_class_data_show_selected',
+      dataType: 'html',
+      data: {
+          independent_ids: selectedIndependentClassIds.join(),
+          dependent_ids: selectedDependentClassIds.join()
+      },
+      success: function(data) {
+          $('#selected-classes').html(data);
+          return false;
+      }
+    });
+  }
+});
+
+$(document.body).on("click", "#delete-class-btn", function() {
+  var ind_id = $(this).attr('ind_id');
+  $('#calendar').fullCalendar('removeEvents', ind_id);
+  selectedIndependentClassIds.splice(selectedIndependentClassIds.indexOf(ind_id), 1);
+
+  if (classDict[ind_id] !== undefined) {
+    var dep_id = classDict[ind_id];
+    $('#calendar').fullCalendar('removeEvents', dep_id);
+    selectedDependentClassIds.splice(selectedDependentClassIds.indexOf(dep_id), 1);
+  }
+
+  if (selectedIndependentClassIds.length == 0 && selectedDependentClassIds.length == 0) {
+    $('#selected-classes-title').removeAttr("class");
+    $('#selected-classes-title').attr("style", "visibility: hidden");
+    $('#selected-classes').removeAttr("class");
+    $('#selected-classes').attr("style", "visibility: hidden");
+    $('#selected-classes').html("");
+  } else if (selectedDependentClassIds.length == 0) {
+    $.ajax({
+      type: 'GET',
+      url: '/independent_class_data_show_selected',
+      dataType: 'html',
+      data: {
+          independent_ids: selectedIndependentClassIds.join()
+      },
+      success: function(data) {
+          $('#selected-classes').html(data);
+          return false;
+      }
+    });
+  } else {
+    $.ajax({
+      type: 'GET',
+      url: '/independent_class_data_show_selected',
+      dataType: 'html',
+      data: {
+          independent_ids: selectedIndependentClassIds.join(),
+          dependent_ids: selectedDependentClassIds.join()
+      },
+      success: function(data) {
+          $('#selected-classes').html(data);
+          return false;
+      }
+    });
+  }
 });
 
 $(document.body).on("click", "#clear-calendar", function() {
   $('#calendar').fullCalendar('removeEvents');
+
+  $('#selected-classes-title').removeAttr("class");
+  $('#selected-classes-title').attr("style", "visibility: hidden");
+
+  $('#selected-classes').removeAttr("class");
+  $('#selected-classes').attr("style", "visibility: hidden");
+
+  selectedIndependentClassIds = [];
+  selectedDependentClassIds = [];
+
+  $('#selected-classes').html("");
 });
 </script>
 
-<style> 
-div.suggestions {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: 1px solid black;
-    position: absolute;   
-}
-
-div.suggestions div {
-    cursor: default;
-    padding: 0px 3px;
-}
-
-div.suggestions div.current {
-    background-color: #3366cc;
-    color: white;
-}
-</style>
