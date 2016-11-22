@@ -26,12 +26,14 @@ class IndependentClassData < ApplicationRecord
   end
 
   def as_json(options = {})
-    {
-      :title => self.title,
-      :start => format_time(self.start_time),
-      :end => format_time(self.end_time),
-      :dow => self.days_to_array(),
-      :color => "green"
-    }
+    if !self.start_time.nil?
+      {
+        :title => self.title,
+        :start => format_time(self.start_time),
+        :end => format_time(self.end_time),
+        :dow => self.days_to_array(),
+        :color => "green"
+      }
+    end
   end
 end

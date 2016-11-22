@@ -17,5 +17,4 @@ Rails.application.routes.draw do
   get '/independent_class_data_search' => 'independent_class_data#show'
   get '/add_section' => 'calendar#index'
   get '/calendar/view' => 'calendar#view'
-  get '/calendar/clear' => 'calendar#clear'
 end

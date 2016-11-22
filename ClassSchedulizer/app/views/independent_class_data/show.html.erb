@@ -128,12 +128,11 @@
               <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
             <% end %>
             <td><%= dependent_class.instructor %></td>
-            <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_class_id="<%= @independent_class_data.id %>"  disc_id="<%= dependent_class.id %>">Add</button></td>
+            <td><button type="button" class="btn btn-primary" id="add-section-btn" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>'  dep_json='<%= dependent_class.as_json.to_json.html_safe %>'>Add</button></td>
           </tr>
         <% end %>
       </table>
     <% end %> 
-
     <button type="button" class="btn btn-primary" id="back-btn">Back</button>
   </div>
 </div>

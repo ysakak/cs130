@@ -93,32 +93,12 @@ $(document.body).on("click", "#back-btn", function() {
 });
 
 $(document.body).on("click", "#add-section-btn", function() {
-    $.ajax({
-        type: 'GET',
-        url: '/calendar/view',
-        dataType: 'html',
-        data: {
-            ind_class_id: $(this).attr('ind_class_id'),
-            disc_id: $(this).attr('disc_id'),
-            ind_class_ids: $('#ind_class_ids').val(),
-            disc_ids: $('#disc_ids').val()
-        },
-        success: function(data) {
-            $('#calendar-wrapper').html(data);
-            return false;
-        }
-    });
+    $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('ind_json')), 'stick');
+    $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('dep_json')), 'stick');
 });
 
 $(document.body).on("click", "#clear-calendar", function() {
-  $.ajax({
-        type: 'GET',
-        url: '/calendar/clear',
-        success: function(data) {
-            $('#calendar-wrapper').html(data);
-            return false;
-        }
-    });
+  $('#calendar').fullCalendar('removeEvents');
 });
 </script>
 
