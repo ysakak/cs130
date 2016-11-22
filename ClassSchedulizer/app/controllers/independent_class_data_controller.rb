@@ -13,6 +13,7 @@ class IndependentClassDataController < ApplicationController
     if (params[:id])
       @independent_class_data = IndependentClassData.find(params[:id])
       @dependent_classes = @independent_class_data.dependent_classes
+      @requisites = @independent_class_data.requisites
     end
 
     render layout: false

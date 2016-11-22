@@ -99,6 +99,25 @@
           <td><%= @independent_class_data.level %></td>
         <% end %>
       </tr>
+      <tr>
+        <th colspan=6>Requisites</th>
+      </tr>
+      <tr>
+        <% if @requisites.length == 0 %>
+          <td>None</td>
+        <% else %>
+          <% @requisites.each do |requisite| %>
+            <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
+              <td><%= requisite.requisite_course_id_1 %></td>
+            <% else %>
+              <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
+            <% end %>
+          <% end %>
+        <% end %>
+
+      </tr>
+
+
     </table>
     <% if @dependent_classes.length > 0 %>
       <table class="table">
