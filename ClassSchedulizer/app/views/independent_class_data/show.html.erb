@@ -103,13 +103,15 @@
         <th colspan=6>Requisites</th>
       </tr>
       <tr>
-        <% if @requisites.nil? %>
+        <% if @requisites.length == 0 %>
           <td>None</td>
         <% else %>
-          <% if @requisites.requisite_course_id_2.nil? || @requisites.requisite_course_id_2.empty? %>
-            <td><%= @requisites.requisite_course_id_1 %></td>
-          <% else %>
-            <td><%= @requisites.requisite_course_id_1 %> <%= @requisites.operator %> <%= @requisites.requisite_course_id_2 %></td>
+          <% @requisites.each do |requisite| %>
+            <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
+              <td><%= requisite.requisite_course_id_1 %></td>
+            <% else %>
+              <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
+            <% end %>
           <% end %>
         <% end %>
 
