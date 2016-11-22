@@ -130,7 +130,20 @@ class_similarity_csv.each do |row|
 	t.save
 end
 
+csv_requisites_file = File.read(Rails.root.join('lib', 'seeds', 'requisites.csv'))
+requsites_csv = CSV.parse(csv_requisites_file, :headers => true, :encoding => 'UTF-8')
+requsites_csv.each do |row|
+	t = Requisite.new
+	t.course_id = row['course_id']
+	t.operator = row['operator']
+	t.requisite_course_id_1 = row['requisite_course_id_1']
+	t.requisite_course_id_2 = row['requisite_course_id_2']
+	t.save
+end
+
+
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
 puts "There are now #{DependentClassData.count} rows in the dependent class data table"
 puts "There are now #{ClassData.count} rows in the class data table"
 puts "There are now #{ClassSimilarity.count} rows in the class similarity table"
+puts "There are now #{Requisite.count} rows in the requisites table"

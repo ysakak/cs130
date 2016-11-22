@@ -1,0 +1,2 @@
+class Requisite < ApplicationRecord
+end

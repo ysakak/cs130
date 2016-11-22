@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @requisite.course_id %>
+</p>
+
+<p>
+  <strong>Operator:</strong>
+  <%= @requisite.operator %>
+</p>
+
+<p>
+  <strong>Requisite course id 1:</strong>
+  <%= @requisite.requisite_course_id_1 %>
+</p>
+
+<p>
+  <strong>Requisite course id 2:</strong>
+  <%= @requisite.requisite_course_id_2 %>
+</p>
+
+<%= link_to 'Edit', edit_requisite_path(@requisite) %> |
+<%= link_to 'Back', requisites_path %>

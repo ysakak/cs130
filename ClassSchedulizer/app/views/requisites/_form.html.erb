@@ -1,0 +1,37 @@
+<%= form_for(requisite) do |f| %>
+  <% if requisite.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(requisite.errors.count, "error") %> prohibited this requisite from being saved:</h2>
+
+      <ul>
+      <% requisite.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :course_id %>
+    <%= f.text_field :course_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :operator %>
+    <%= f.text_field :operator %>
+  </div>
+
+  <div class="field">
+    <%= f.label :requisite_course_id_1 %>
+    <%= f.text_field :requisite_course_id_1 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :requisite_course_id_2 %>
+    <%= f.text_field :requisite_course_id_2 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

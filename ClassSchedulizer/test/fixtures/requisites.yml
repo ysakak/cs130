@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  course_id: MyString
+  operator: MyString
+  requisite_course_id_1: MyString
+  requisite_course_id_2: MyString
+
+two:
+  course_id: MyString
+  operator: MyString
+  requisite_course_id_1: MyString
+  requisite_course_id_2: MyString

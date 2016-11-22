@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :requisites
   resources :class_data
   get 'calendar/index'
 
