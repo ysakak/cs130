@@ -16,6 +16,7 @@ class ClassDataController < ApplicationController
       @independent_classes = @class_data.independent_classes
       total_similarities = @class_data.similar_classes
       @similar_classes = []
+      @requisites = @class_data.requisites
 
       for similarity in total_similarities.order('similarity desc')
         if similarity.similarity > 0.05
