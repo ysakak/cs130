@@ -63,7 +63,7 @@ csv.each do |row|
 	t.save
 	puts "#{t.title} saved"
 
-	if class_data_title_set.exclude?(row['title'])
+	if class_data_title_set.exclude?(row['course_id'])
 		s = ClassData.new
 		s.course_id = row['course_id']
 		s.title = row['title']
@@ -76,7 +76,7 @@ csv.each do |row|
 		s.restrictions = row['restrictions']
 		s.impacted_class = row['impacted_class']
 		s.level = row['level']
-		class_data_title_set << row['title']
+		class_data_title_set << row['course_id']
 		s.save
 	end
 end

@@ -1,72 +1,102 @@
 <div id="class_details">
-  <div class="row m-x-auto">
-    <table class="table table-fixed">
-      <thead>
-        <tr>
-          <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
-        </tr>
-        <tr>
-          <th colspan=6>Lectures</th>
-        </tr>
-        <tr>
-          <th class="col-md-2">Day(s)</th>
-          <th class="col-md-2">Start Time</th>
-          <th class="col-md-2">End Time</th>
-          <th class="col-md-2">Instructor(s)</th>
-          <th class="col-md-2">Bruinwalk Rating</th>
-          <th class="col-md-2">Details</th>
-        </tr>
-      </thead>
-      <tbody class="lecture-data">
-        <% @independent_classes.each do |independent_class| %>
+  <div class="row">
+    <ul class="nav nav-tabs" data-tabs="tabs">
+      <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#details" role="tab">Details</a></li>
+      <% if @has_similar_classes %>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#similar-classes" role="tab">Similar Classes</a></li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="tab-content">
+    <div class="row tab-pane active" id="details">
+      <table class="table table-fixed">
+        <thead>
           <tr>
-            <td class="col-md-2"><%= independent_class.days %></td>
-            <% if independent_class.start_time.nil? %>
-              <td class="col-md-2">N/A</td>
-            <% else %>
-              <td class="col-md-2"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <% if independent_class.end_time.nil? %>
-              <td class="col-md-2">N/A</td>
-            <% else %>
-              <td class="col-md-2"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
-            <% end %>
-            <td class="col-md-2"><%= independent_class.instructor %></td>
-            <td class="col-md-2">Bruinwalk Rating</td>
-            <td class="col-md-2">
-              <button type="button" class="btn btn-primary" id="independent-class-btn" independent_class_id="<%= independent_class.id %>">Details</button>
-            </td>
+            <th colspan=6><%= @class_data.course_id %> - <%= @class_data.title %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <table class="table">
-      <tr>
-        <th colspan=5>Description</th>
-      </tr>
-      <tr>
-        <td colspan=5><%= @class_data.description %></td>
-      </tr>
-      <tr>
-        <th colspan=5>Enrollment Information</th>
-      </tr>
-      <tr>
-        <th>Units</th>
-        <th>Grade Type</th>
-        <th>Restrictions</th>
-        <th>Impacted</th>
-        <th>Level</th>
-      </tr>
-      <tr>
-        <td><%= @class_data.units %></td>
-        <td><%= @class_data.grade_type %></td>
-        <td><%= @class_data.restrictions %></td>
-        <td><%= @class_data.impacted_class %></td>
-        <td><%= @class_data.level %></td>
-      </tr>
-    </table>
-    <button type="button" class="btn btn-primary" id="back-btn" major="<%= @major %>">Back</button>
-
+          <tr>
+            <th colspan=6>Lectures</th>
+          </tr>
+          <tr>
+            <th class="col-md-2">Day(s)</th>
+            <th class="col-md-2">Start Time</th>
+            <th class="col-md-2">End Time</th>
+            <th class="col-md-2">Instructor(s)</th>
+            <th class="col-md-2">Bruinwalk Rating</th>
+            <th class="col-md-2">Details</th>
+          </tr>
+        </thead>
+        <tbody class="lecture-data">
+          <% @independent_classes.each do |independent_class| %>
+            <tr>
+              <td class="col-md-2"><%= independent_class.days %></td>
+              <% if independent_class.start_time.nil? %>
+                <td class="col-md-2">N/A</td>
+              <% else %>
+                <td class="col-md-2"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+              <% end %>
+              <% if independent_class.end_time.nil? %>
+                <td class="col-md-2">N/A</td>
+              <% else %>
+                <td class="col-md-2"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+              <% end %>
+              <td class="col-md-2"><%= independent_class.instructor %></td>
+              <td class="col-md-2">Bruinwalk Rating</td>
+              <td class="col-md-2">
+                <button type="button" class="btn btn-primary" id="independent-class-btn" independent_class_id="<%= independent_class.id %>">Details</button>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <table class="table">
+        <tr>
+          <th colspan=5>Description</th>
+        </tr>
+        <tr>
+          <td colspan=5><%= @class_data.description %></td>
+        </tr>
+        <tr>
+          <th colspan=5>Enrollment Information</th>
+        </tr>
+        <tr>
+          <th>Units</th>
+          <th>Grade Type</th>
+          <th>Restrictions</th>
+          <th>Impacted</th>
+          <th>Level</th>
+        </tr>
+        <tr>
+          <td><%= @class_data.units %></td>
+          <td><%= @class_data.grade_type %></td>
+          <td><%= @class_data.restrictions %></td>
+          <td><%= @class_data.impacted_class %></td>
+          <td><%= @class_data.level %></td>
+        </tr>
+      </table>
+      <button type="button" class="btn btn-primary" id="back-btn" major="<%= @major %>">Back</button>
+    </div>
+    <div class="tab-pane" id="similar-classes">
+      <% if @has_similar_classes %>
+        <table class="table">
+          <tr>
+            <th colspan=3><%= @class_data.course_id %> - <%= @class_data.title %></th>
+          </tr>
+          <tr>
+            <th>Course Title</th>
+            <th>Description</th>
+            <th>Details</th>
+          </tr>
+          <% @similar_classes.each do |similar_class| %>
+            <tr>
+              <td><%= similar_class.course_id %> - <%= similar_class.title %></td>
+              <td><%= similar_class.description %></td>
+              <td><button type="button" class="btn btn-primary similar-class-details" id="<%= similar_class.id %>">Details</button></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
   </div>
 </div>
 
@@ -86,5 +116,4 @@
 .table-fixed td {
   overflow: wrap;
 }
-
 </style>

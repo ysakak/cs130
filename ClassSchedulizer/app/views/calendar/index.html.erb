@@ -69,6 +69,22 @@ $(document.body).on("click", ".card", function() {
     });
 });
 
+$(document.body).on("click", ".similar-class-details", function() {
+    $.ajax({
+        type: 'GET',
+        url: '/class_data_search',
+        dataType: 'html',
+        data: {
+            id: $(this).attr('id'),
+        },
+        success: function(data) {
+            stateDataStack.push(data);
+            $('#results').html(data);
+            return false;
+        }
+    });
+});
+
 $(document.body).on("click", "#independent-class-btn", function() {
     $.ajax({
         type: 'GET',
