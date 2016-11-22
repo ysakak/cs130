@@ -1,5 +1,10 @@
 <div class="row" id="content">
-  <div id="calendar-title" class="tile tile-header col-md-10 offset-md-1">Calendar</div>
+  <div id="calendar-title" class="tile tile-header col-md-10 offset-md-1">
+    Calendar
+    <div id="calendar-minimize" class="minimize-wrapper">
+      <div class="minimize-button"></div>
+    </div>
+  </div>
   <div id="calendar-wrapper" class="tile col-md-10 offset-md-1"></div>
   <div id="calendar-footer" class="tile col-md-10 offset-md-1">
     <div id="calendar-options">
@@ -10,10 +15,10 @@
       </div>
     </div>
   </div>
-  <div id="selected-classes-title" style="visibility: hidden">
+  <div id="selected-classes-title" style="display:none">
     Selected Classes
   </div>
-  <div id="selected-classes" style="visibility: hidden"></div>
+  <div id="selected-classes" style="display:none"></div>
   <div id="search-box-title" class="tile tile-header col-md-10 offset-md-1">Search</div>
   <div id="search-box" class="tile col-md-10 offset-md-1">
     <div class="row">
@@ -183,9 +188,9 @@ $(document.body).on("click", "#delete-class-btn", function() {
 
   if (selectedIndependentClassIds.length == 0 && selectedDependentClassIds.length == 0) {
     $('#selected-classes-title').removeAttr("class");
-    $('#selected-classes-title').attr("style", "visibility: hidden");
+    $('#selected-classes-title').attr("style", "display:none");
     $('#selected-classes').removeAttr("class");
-    $('#selected-classes').attr("style", "visibility: hidden");
+    $('#selected-classes').attr("style", "display:none");
     $('#selected-classes').html("");
   } else if (selectedDependentClassIds.length == 0) {
     $.ajax({
@@ -221,15 +226,23 @@ $(document.body).on("click", "#clear-calendar", function() {
   $('#calendar').fullCalendar('removeEvents');
 
   $('#selected-classes-title').removeAttr("class");
-  $('#selected-classes-title').attr("style", "visibility: hidden");
+  $('#selected-classes-title').attr("style", "display:none");
 
   $('#selected-classes').removeAttr("class");
-  $('#selected-classes').attr("style", "visibility: hidden");
+  $('#selected-classes').attr("style", "display:none");
 
   selectedIndependentClassIds = [];
   selectedDependentClassIds = [];
 
   $('#selected-classes').html("");
+});
+
+$(document.body).on("click", "#calendar-minimize", function() {
+  if ($('#calendar-wrapper').attr('style') !== undefined) {
+    $('#calendar-wrapper').removeAttr('style');
+  } else {
+    $('#calendar-wrapper').attr('style', 'display:none');
+  }
 });
 </script>
 
