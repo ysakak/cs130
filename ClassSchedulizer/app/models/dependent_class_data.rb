@@ -25,13 +25,15 @@ class DependentClassData < ApplicationRecord
   end
 
   def as_json(options = {})
+    color_list = ["green", "olive", "yellow", "blue", "orange", "purple", "teal"]
+
     if !self.start_time.nil?
       {
         :title => self.title,
         :start => format_time(self.start_time),
         :end => format_time(self.end_time),
         :dow => self.days_to_array(),
-        :color => "green"
+        :color => color_list[self.lecture_id % 7]
       }
     end
   end
