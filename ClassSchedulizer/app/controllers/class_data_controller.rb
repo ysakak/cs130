@@ -9,7 +9,12 @@ class ClassDataController < ApplicationController
         @class_data = ClassData.joins(:ge_categories).where(:ge_categories => {foundation: params[:foundation]})
       end
     elsif (params[:keywords])
-      results = ClassData.__elasticsearch__.search params[:keywords]
+      results = ClassData.__elasticsearch__.search(
+        query: {query_string: {
+          query: params[:keywords]
+        }},
+        size: 1000
+      )
       @class_data = results.records.to_a
     else
       @class_data = ClassData.all

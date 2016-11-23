@@ -23,48 +23,60 @@
   </div>
   <div id="selected-classes" style="display:none"></div>
   <div id="search-box-title" class="tile tile-header col-md-10 offset-md-1">Search</div>
-  <div id="search-box" class="tile col-md-10 offset-md-1">
-    <div class="row">
-      <form id="search-form" method="get">
-        <div class="col-md-2">Search by Major</div>
-        <div class="col-md-3">
-          <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+  <div class="tile col-md-10 offset-md-1">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#search-box" role="tab">Search by Major</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ge-search-box" role="tab">Search by GE Category</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#keyword-search-box" role="tab">Search by Keyword</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div id="search-box" class="tab-pane active">
+        <div class="row">
+          <form id="search-form" method="get">
+            <div class="col-md-3 offset-md-2">
+              <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+            </div>
+            <div class="col-md-2 offset-md-3">
+                <input type="submit" class="form-control" value="Search">
+            </div>
+          </form>
         </div>
-        <div class="col-md-2 offset-md-4">
-            <input type="submit" class="form-control" value="Search">
+      </div>
+      <div id="ge-search-box" class="tab-pane">
+        <div class="row">
+          <div class="col-md-3 offset-md-1">
+            <select id="foundation-search" class="form-control">
+              <option selected disabled>Choose a Foundation</option>
+              <option value="Foundations of Arts and Humanities">Foundations of Arts and Humanities</option>
+              <option value="Foundations of Scientific Inquiry">Foundations of Scientific Inquiry</option>
+              <option value="Foundations of Society and Culture">Foundations of Society and Culture</option>
+            </select>
+          </div>
+          <div class="col-md-3 offset-md-1">
+            <select disabled id="category-search" class="form-control">
+              <option selected disabled>Choose a Category</option>
+            </select>
+          </div>
+          <div class="col-md-2 offset-md-1">
+            <input type="submit" id="ge-search-submit" class="form-control" value="Search">
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
-  <div id="ge-search-box" class="tile col-md-10 offset-md-1">
-    <div class="row">
-      <div class="col-md-2">Search by GE Category</div>
-      <div class="col-md-3">
-        <select id="foundation-search" class="form-control">
-          <option selected disabled>Choose a Foundation</option>
-          <option value="Foundations of Arts and Humanities">Foundations of Arts and Humanities</option>
-          <option value="Foundations of Scientific Inquiry">Foundations of Scientific Inquiry</option>
-          <option value="Foundations of Society and Culture">Foundations of Society and Culture</option>
-        </select>
       </div>
-      <div class="col-md-3">
-        <select disabled id="category-search" class="form-control">
-          <option selected disabled>Choose a Category</option>
-        </select>
-      </div>
-      <div class="col-md-2 offset-md-1">
-        <input type="submit" id="ge-search-submit" class="form-control" value="Search">
-      </div>
-    </div>
-  </div>
-  <div id="keyword-search-box" class="tile col-md-10 offset-md-1">
-    <div class="row">
-      <div class="col-md-2">Search by Keyword</div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" id="keyword-search" placeholder="Keyword(s)">
-      </div>
-      <div class="col-md-2 offset-md-4">
-        <input type="submit" id="keyword-search-submit" class="form-control" value="Search">
+      <div id="keyword-search-box" class="tab-pane">
+        <div class="row">
+          <div class="col-md-3 offset-md-2">
+            <input type="text" class="form-control" id="keyword-search" placeholder="Keyword(s)">
+          </div>
+          <div class="col-md-2 offset-md-3">
+            <input type="submit" id="keyword-search-submit" class="form-control" value="Search">
+          </div>
+        </div>
       </div>
     </div>
   </div>
