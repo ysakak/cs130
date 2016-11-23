@@ -231,6 +231,11 @@ $(document.body).on("click", "#back-btn", function() {
 });
 
 $(document.body).on("click", "#add-section-btn", function() {
+  if ($('#calendar-wrapper').attr('style') !== undefined) {
+    $('#calendar-wrapper').removeAttr('style');
+    $('#calendar-footer').removeAttr('style');
+  }
+
   $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('ind_json')), 'stick');
 
   $('#selected-classes-title').addClass("tile tile-header col-md-10 offset-md-1");
@@ -277,6 +282,8 @@ $(document.body).on("click", "#add-section-btn", function() {
       }
     });
   }
+
+  $('#results').html("");
 });
 
 $(document.body).on("click", "#delete-class-btn", function() {

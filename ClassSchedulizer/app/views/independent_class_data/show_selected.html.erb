@@ -1,6 +1,6 @@
 <% if !@independent_classes.empty? %>
   <table class="table">
-    <tr>Lectures</tr>
+    <tr><th colspan=6>Lectures</th></tr>
     <tr>
       <th>Class Title</th>
       <th>Section</th>
@@ -19,26 +19,24 @@
         <td><input type="submit" ind_id="<%= independent_class.lecture_id %>" id="delete-class-btn" class="form-control" value="Delete"></td>
       </tr>
     <% end %>
-  </table>
-<% end %>
-<% if !@dependent_classes.empty? %>
-  <table class="table">
-    <tr>Discussions</tr>
-    <tr>
-      <th>Class Title</th>
-      <th>Section</th>
-      <th>Instructor</th>
-      <th>Start Time</th>
-      <th>End Time</th>
-    </tr>
-    <% @dependent_classes.each do |dependent_class| %>
+    <% if !@dependent_classes.empty? %>
+      <tr><th colspan=6>Discussions</th></tr>
       <tr>
-        <td><%= dependent_class.course_id %> - <%= dependent_class.title %></td>
-        <td><%= dependent_class.section %></td>
-        <td><%= dependent_class.instructor %></td>
-        <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
-        <td><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
+        <th>Class Title</th>
+        <th>Section</th>
+        <th>Instructor</th>
+        <th>Start Time</th>
+        <th colspan=2>End Time</th>
       </tr>
+      <% @dependent_classes.each do |dependent_class| %>
+        <tr>
+          <td><%= dependent_class.course_id %> - <%= dependent_class.title %></td>
+          <td><%= dependent_class.section %></td>
+          <td><%= dependent_class.instructor %></td>
+          <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
+          <td colspan=2><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
+        </tr>
+      <% end %>
     <% end %>
   </table>
 <% end %>
