@@ -17,19 +17,44 @@
   </div>
   <div id="selected-classes-title" style="display:none">
     Selected Classes
+    <div id="selected-classes-minimize" class="minimize-wrapper">
+      <div class="minimize-button"></div>
+    </div>
   </div>
   <div id="selected-classes" style="display:none"></div>
   <div id="search-box-title" class="tile tile-header col-md-10 offset-md-1">Search</div>
   <div id="search-box" class="tile col-md-10 offset-md-1">
     <div class="row">
       <form id="search-form" method="get">
-        <div class="col-md-4 offset-md-2">
+        <div class="col-md-2">Search by Major</div>
+        <div class="col-md-3">
             <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
         </div>
-        <div class="col-md-3 offset-md-1">
+        <div class="col-md-2 offset-md-4">
             <input type="submit" class="form-control" value="Search">
         </div>
       </form>
+    </div>
+  </div>
+  <div id="ge-search-box" class="tile col-md-10 offset-md-1">
+    <div class="row">
+      <div class="col-md-2">Search by GE Category</div>
+      <div class="col-md-3">
+        <select id="foundation-search" class="form-control">
+          <option selected disabled>Choose a Foundation</option>
+          <option value="Foundations of Arts and Humanities">Foundations of Arts and Humanities</option>
+          <option value="Foundations of Scientific Inquiry">Foundations of Scientific Inquiry</option>
+          <option value="Foundations of Society and Culture">Foundations of Society and Culture</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select disabled id="category-search" class="form-control">
+          <option selected disabled>Choose a Category</option>
+        </select>
+      </div>
+      <div class="col-md-2 offset-md-1">
+        <input type="submit" id="ge-search-submit" class="form-control" value="Search">
+      </div>
     </div>
   </div>
   <div id="results" class="tile col-md-10 offset-md-1"></div>
@@ -41,6 +66,11 @@ var selectedIndependentClassIds = [];
 var selectedDependentClassIds = [];
 var classDict = {};
 var classToEventIdDict = {};
+var ge_categories = {
+  "Foundations of Arts and Humanities": ["Literary and Cultural Analysis", "Philosophical and Linguistic Analysis", "Visual and Performance Arts Analysis and Practice"],
+  "Foundations of Scientific Inquiry": ["Life Sciences", "Physical Sciences"],
+  "Foundations of Society and Culture": ["Historical Analysis", "Social Analysis"]
+};
 
 window.onload = function () {
   var oTextbox = new AutoSuggestControl(document.getElementById("search"), new StateSuggestions());
@@ -69,6 +99,41 @@ $('#search-form').submit(function(event) {
             return false;
         }
     });
+});
+
+$(document.body).on('click', '#ge-search-submit', function() {
+  if ($('#foundation-search').val() !== "Choose a Foundation") {
+    if ($('#category-search').val() !== "Choose a Category") {
+      $.ajax({
+        type: 'GET',
+        url: '/search',
+        dataType: 'html',
+        data : {
+            foundation: $('#foundation-search').val(),
+            category: $('#category-search').val()
+        },
+        success: function(data) {
+            stateDataStack.push(data);
+            $('#results').html(data);
+            return false;
+        }
+      });
+    } else {
+      $.ajax({
+        type: 'GET',
+        url: '/search',
+        dataType: 'html',
+        data : {
+            foundation: $('#foundation-search').val()
+        },
+        success: function(data) {
+            stateDataStack.push(data);
+            $('#results').html(data);
+            return false;
+        }
+      });
+    }
+  } 
 });
 
 $(document.body).on("click", ".card", function() {
@@ -240,9 +305,34 @@ $(document.body).on("click", "#clear-calendar", function() {
 $(document.body).on("click", "#calendar-minimize", function() {
   if ($('#calendar-wrapper').attr('style') !== undefined) {
     $('#calendar-wrapper').removeAttr('style');
+    $('#calendar-footer').removeAttr('style');
   } else {
     $('#calendar-wrapper').attr('style', 'display:none');
+    $('#calendar-footer').attr('style', 'display:none');
   }
 });
+
+$(document.body).on("click", "#selected-classes-minimize", function() {
+  if ($('#selected-classes').attr('style') !== undefined) {
+    $('#selected-classes').removeAttr('style');
+  } else {
+    $('#selected-classes').attr('style', 'display:none');
+  }
+});
+
+$('#foundation-search').change(function() {
+  var foundation = $(this).val()
+  $('#category-search').removeAttr('disabled');
+  $('#category-search').html("");
+  $('#category-search').append("<option selected>Choose a Category</option>")
+  for (var index in ge_categories[foundation]) {
+    $('#category-search').append('<option value="' + ge_categories[foundation][index] + '">' + ge_categories[foundation][index] + '</option>');
+  }
+})
+
+window.onbeforeunload = function() {
+  return "Data will be lost if you leave the page, are you sure?";
+};
+
 </script>
 

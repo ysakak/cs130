@@ -2,7 +2,13 @@ class ClassDataController < ApplicationController
   def index
     if (params[:major]) 
       @class_data = ClassData.where(major: params[:major])
-    else 
+    elsif (params[:foundation])
+      if (params[:category])
+        @class_data = ClassData.joins(:ge_categories).where(:ge_categories => {foundation: params[:foundation], category: params[:category]})
+      else
+        @class_data = ClassData.joins(:ge_categories).where(:ge_categories => {foundation: params[:foundation]})
+      end
+    else
       @class_data = ClassData.all
     end
 

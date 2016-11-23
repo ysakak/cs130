@@ -1,125 +1,126 @@
-<div id="class-data-header">
-  <%= @class_data.course_id %> - <%= @class_data.title %>
-</div>
-<div id="class-details">
-  <div class="row">
-    <ul class="nav nav-tabs col-md-10 offset-md-1" data-tabs="tabs">
-      <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#details" role="tab">Details</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lectures" role="tab">Lectures</a></li>
-      <% if @has_similar_classes %>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#similar-classes" role="tab">Similar Classes</a></li>
-      <% end %>
-    </ul>
-    <div class="tab-content col-md-10 offset-md-1">
-      <div class="tab-pane active" id="details">
-        <table class="table">
-          <tr>
-            <th colspan=5>Description</th>
-          </tr>
-          <tr>
-            <td colspan=5><%= @class_data.description %></td>
-          </tr>
-          <tr>
-            <th colspan=5>Enrollment Information</th>
-          </tr>
-          <tr>
-            <th>Units</th>
-            <th>Grade Type</th>
-            <th>Restrictions</th>
-            <th>Impacted</th>
-            <th>Level</th>
-          </tr>
-          <tr>
-            <td><%= @class_data.units %></td>
-            <td><%= @class_data.grade_type %></td>
-            <td><%= @class_data.restrictions %></td>
-            <td><%= @class_data.impacted_class %></td>
-            <td><%= @class_data.level %></td>
-          </tr>
-          <tr>
-            <th colspan=6>Requisites</th>
-          </tr>
-          <tr>
-            <% if @requisites.length == 0 %>
-              <td>None</td>
-            <% else %>
-              <% @requisites.each do |requisite| %>
-                <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
-                  <td><%= requisite.requisite_course_id_1 %></td>
-                <% else %>
-                  <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
-                <% end %>
-              <% end %>
-            <% end %>
-          </tr>
-        </table>
-      </div>
-      <div class="tab-pane" id="lectures">
-        <table class="table">
-          <thead>
-            <tr>
-              <th colspan=6>Lectures</th>
-            </tr>
-            <tr>
-              <th class="col-md-2">Day(s)</th>
-              <th class="col-md-2">Start Time</th>
-              <th class="col-md-2">End Time</th>
-              <th class="col-md-2">Instructor(s)</th>
-              <th class="col-md-2">Bruinwalk Rating</th>
-              <th class="col-md-2">Details</th>
-            </tr>
-          </thead>
-          <tbody class="lecture-data">
-            <% @independent_classes.each do |independent_class| %>
-              <tr>
-                <td class="col-md-2"><%= independent_class.days %></td>
-                <% if independent_class.start_time.nil? %>
-                  <td class="col-md-2">N/A</td>
-                <% else %>
-                  <td class="col-md-2"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
-                <% end %>
-                <% if independent_class.end_time.nil? %>
-                  <td class="col-md-2">N/A</td>
-                <% else %>
-                  <td class="col-md-2"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
-                <% end %>
-                <td class="col-md-2"><%= independent_class.instructor %></td>
-                <td class="col-md-2">Bruinwalk Rating</td>
-                <td class="col-md-2">
-                  <input type="submit" id="independent-class-btn" class="form-control" independent_class_id="<%= independent_class.id %>" value="Details">
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-      <div class="tab-pane" id="similar-classes">
+ <div class="row">
+  <div id="class-data-header">
+    <%= @class_data.course_id %> - <%= @class_data.title %>
+  </div>
+  <div id="class-details">
+    <div class="row">
+      <ul class="nav nav-tabs col-md-10 offset-md-1" data-tabs="tabs">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#details" role="tab">Details</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lectures" role="tab">Lectures</a></li>
         <% if @has_similar_classes %>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#similar-classes" role="tab">Similar Classes</a></li>
+        <% end %>
+      </ul>
+      <div class="tab-content col-md-10 offset-md-1">
+        <div class="tab-pane active" id="details">
           <table class="table">
             <tr>
-              <th>Course Title</th>
-              <th>Description</th>
-              <th>Details</th>
+              <th colspan=5>Description</th>
             </tr>
-            <% @similar_classes.each do |similar_class| %>
-              <tr>
-                <td><%= similar_class.course_id %> - <%= similar_class.title %></td>
-                <td><%= similar_class.description %></td>
-                <td>
-                  <input type="submit" id="<%= similar_class.id %>" class="form-control similar-class-details" value="Details">
-                </td>
-              </tr>
-            <% end %>
+            <tr>
+              <td colspan=5><%= @class_data.description %></td>
+            </tr>
+            <tr>
+              <th colspan=5>Enrollment Information</th>
+            </tr>
+            <tr>
+              <th>Units</th>
+              <th>Grade Type</th>
+              <th>Restrictions</th>
+              <th>Impacted</th>
+              <th>Level</th>
+            </tr>
+            <tr>
+              <td><%= @class_data.units %></td>
+              <td><%= @class_data.grade_type %></td>
+              <td><%= @class_data.restrictions %></td>
+              <td><%= @class_data.impacted_class %></td>
+              <td><%= @class_data.level %></td>
+            </tr>
+            <tr>
+              <th colspan=6>Requisites</th>
+            </tr>
+            <tr>
+              <% if @requisites.length == 0 %>
+                <td>None</td>
+              <% else %>
+                <% @requisites.each do |requisite| %>
+                  <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
+                    <td><%= requisite.requisite_course_id_1 %></td>
+                  <% else %>
+                    <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </tr>
           </table>
-        <% end %>
+        </div>
+        <div class="tab-pane" id="lectures">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan=6>Lectures</th>
+              </tr>
+              <tr>
+                <th class="col-md-2">Day(s)</th>
+                <th class="col-md-2">Start Time</th>
+                <th class="col-md-2">End Time</th>
+                <th class="col-md-2">Instructor(s)</th>
+                <th class="col-md-2">Bruinwalk Rating</th>
+                <th class="col-md-2">Details</th>
+              </tr>
+            </thead>
+            <tbody class="lecture-data">
+              <% @independent_classes.each do |independent_class| %>
+                <tr>
+                  <td class="col-md-2"><%= independent_class.days %></td>
+                  <% if independent_class.start_time.nil? %>
+                    <td class="col-md-2">N/A</td>
+                  <% else %>
+                    <td class="col-md-2"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+                  <% end %>
+                  <% if independent_class.end_time.nil? %>
+                    <td class="col-md-2">N/A</td>
+                  <% else %>
+                    <td class="col-md-2"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+                  <% end %>
+                  <td class="col-md-2"><%= independent_class.instructor %></td>
+                  <td class="col-md-2">Bruinwalk Rating</td>
+                  <td class="col-md-2">
+                    <input type="submit" id="independent-class-btn" class="form-control" independent_class_id="<%= independent_class.id %>" value="Details">
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane" id="similar-classes">
+          <% if @has_similar_classes %>
+            <table class="table">
+              <tr>
+                <th>Course Title</th>
+                <th>Description</th>
+                <th>Details</th>
+              </tr>
+              <% @similar_classes.each do |similar_class| %>
+                <tr>
+                  <td><%= similar_class.course_id %> - <%= similar_class.title %></td>
+                  <td><%= similar_class.description %></td>
+                  <td>
+                    <input type="submit" id="<%= similar_class.id %>" class="form-control similar-class-details" value="Details">
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
+  <div id="class-data-footer">
+    <input type="submit" id="back-btn" class="form-control" value="Back">
+  </div>
 </div>
-<div id="class-data-footer">
-  <input type="submit" id="back-btn" class="form-control" value="Back">
-</div>
-
 <style>
 
 div#class-data-header {

@@ -141,9 +141,19 @@ requsites_csv.each do |row|
 	t.save
 end
 
+csv_ge_file = File.read(Rails.root.join('lib', 'seeds', 'ge_categories.csv'))
+ge_csv = CSV.parse(csv_ge_file, :headers => true, :encoding => 'UTF-8')
+ge_csv.each do |row|
+	t = GeCategory.new
+	t.course_id = row['course_id']
+	t.foundation = row['foundation']
+	t.category = row['category']
+	t.save
+end
 
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
 puts "There are now #{DependentClassData.count} rows in the dependent class data table"
 puts "There are now #{ClassData.count} rows in the class data table"
 puts "There are now #{ClassSimilarity.count} rows in the class similarity table"
 puts "There are now #{Requisite.count} rows in the requisites table"
+puts "There are now #{GeCategory.count} rows in the ge categories table"
