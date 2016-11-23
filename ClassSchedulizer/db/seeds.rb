@@ -151,6 +151,8 @@ ge_csv.each do |row|
 	t.save
 end
 
+ClassData.import
+
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
 puts "There are now #{DependentClassData.count} rows in the dependent class data table"
 puts "There are now #{ClassData.count} rows in the class data table"

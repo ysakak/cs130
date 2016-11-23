@@ -28,7 +28,7 @@
       <form id="search-form" method="get">
         <div class="col-md-2">Search by Major</div>
         <div class="col-md-3">
-            <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
+          <input type="text" class="form-control" name="search" id="search" placeholder="Search your major">
         </div>
         <div class="col-md-2 offset-md-4">
             <input type="submit" class="form-control" value="Search">
@@ -54,6 +54,17 @@
       </div>
       <div class="col-md-2 offset-md-1">
         <input type="submit" id="ge-search-submit" class="form-control" value="Search">
+      </div>
+    </div>
+  </div>
+  <div id="keyword-search-box" class="tile col-md-10 offset-md-1">
+    <div class="row">
+      <div class="col-md-2">Search by Keyword</div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" id="keyword-search" placeholder="Keyword(s)">
+      </div>
+      <div class="col-md-2 offset-md-4">
+        <input type="submit" id="keyword-search-submit" class="form-control" value="Search">
       </div>
     </div>
   </div>
@@ -87,17 +98,17 @@ window.onload = function () {
 $('#search-form').submit(function(event) {
     event.preventDefault();
     $.ajax({
-        type: 'GET',
-        url: '/search',
-        dataType: 'html',
-        data : {
-            major: $('#search').val()
-        },
-        success: function(data) {
-            stateDataStack.push(data);
-            $('#results').html(data);
-            return false;
-        }
+      type: 'GET',
+      url: '/search',
+      dataType: 'html',
+      data : {
+        major: $('#search').val()
+      },
+      success: function(data) {
+        stateDataStack.push(data);
+        $('#results').html(data);
+        return false;
+      }
     });
 });
 
@@ -134,6 +145,22 @@ $(document.body).on('click', '#ge-search-submit', function() {
       });
     }
   } 
+});
+
+$(document.body).on('click', '#keyword-search-submit', function(){
+    $.ajax({
+      type: 'GET',
+      url: '/search',
+      dataType: 'html',
+      data : {
+        keywords: $('#keyword-search').val()
+      },
+      success: function(data) {
+        stateDataStack.push(data);
+        $('#results').html(data);
+        return false;
+      }
+    });
 });
 
 $(document.body).on("click", ".card", function() {
