@@ -54,6 +54,7 @@ def get_class_rating(page, number):
 def get_class_list(url):
 	page = get_page(url)
 	html = page.text
+	html = html.replace('amp;', '')
 #	print html
 	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
 	classNamePattern1 = re.compile(classNameRegEx1)
@@ -72,9 +73,9 @@ def get_class_list(url):
 ''' writes the class ratings to csv files '''
 def write_to_csv(class_rating_list):
 	os_dir = os.path.dirname(__file__)
-	class_rating_file = os.path.join( \
+	class_rating_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/db/class_rating_data.csv')
-	class_rating_file = open(class_rating_file, 'w')
+	class_rating_file = open(class_rating_filename, 'w')
 	class_rating_writer = csv.writer(class_rating_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)
 	class_rating_writer.writerow(( \
