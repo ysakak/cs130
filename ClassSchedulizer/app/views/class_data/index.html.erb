@@ -3,7 +3,11 @@
     <% if index % @col_count == 0 %>
       <div class="card-deck">
     <% end %>
-    <div class="card card-block text-xs-center" id="<%= class_data.id %>">
+    <% if class_data.invalid %>
+      <div class="invalid-card card card-block text-xs-center" id="<%= class_data.id %>">
+    <% else %>
+      <div class="valid-card card card-block text-xs-center" id="<%= class_data.id %>">
+    <% end %>
       <h3 class="card-title"><%= class_data.course_id %></h3>
       <p class="card-text"><%= class_data.title %></p>
     </div>
@@ -17,6 +21,10 @@
 
 .card-block {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+}
+
+.invalid-card {
+  opacity: 0.5;
 }
 
 

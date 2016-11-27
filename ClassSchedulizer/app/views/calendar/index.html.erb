@@ -107,14 +107,35 @@ window.onload = function () {
   });
 }
 
+var getTimes = function() {
+  var start_times = $('.start-time').map(function() {
+    return $(this).text();
+  }).get().join();
+  var end_times = $('.end-time').map(function() {
+    return $(this).text();
+  }).get().join();
+
+  return [start_times, end_times];
+}
+
+var getDays = function() {
+  return $('.days').map(function() {
+    return $(this).text();
+  }).get().join('|');
+}
+
 $('#search-form').submit(function(event) {
     event.preventDefault();
+    var times = getTimes();
     $.ajax({
       type: 'GET',
       url: '/search',
       dataType: 'html',
       data : {
-        major: $('#search').val()
+        major: $('#search').val(),
+        start_times: times[0],
+        end_times: times[1],
+        days: getDays()
       },
       success: function(data) {
         stateDataStack.push(data);
@@ -125,6 +146,7 @@ $('#search-form').submit(function(event) {
 });
 
 $(document.body).on('click', '#ge-search-submit', function() {
+  var times = getTimes();
   if ($('#foundation-search').val() !== "Choose a Foundation") {
     if ($('#category-search').val() !== "Choose a Category") {
       $.ajax({
@@ -133,7 +155,10 @@ $(document.body).on('click', '#ge-search-submit', function() {
         dataType: 'html',
         data : {
             foundation: $('#foundation-search').val(),
-            category: $('#category-search').val()
+            category: $('#category-search').val(),
+            start_times: times[0],
+            end_times: times[1],
+            days: getDays()
         },
         success: function(data) {
             stateDataStack.push(data);
@@ -147,7 +172,10 @@ $(document.body).on('click', '#ge-search-submit', function() {
         url: '/search',
         dataType: 'html',
         data : {
-            foundation: $('#foundation-search').val()
+            foundation: $('#foundation-search').val(),
+            start_times: times[0],
+            end_times: times[1],
+            days: getDays()
         },
         success: function(data) {
             stateDataStack.push(data);
@@ -160,28 +188,36 @@ $(document.body).on('click', '#ge-search-submit', function() {
 });
 
 $(document.body).on('click', '#keyword-search-submit', function(){
-    $.ajax({
-      type: 'GET',
-      url: '/search',
-      dataType: 'html',
-      data : {
-        keywords: $('#keyword-search').val()
-      },
-      success: function(data) {
-        stateDataStack.push(data);
-        $('#results').html(data);
-        return false;
-      }
-    });
+  var times = getTimes();
+  $.ajax({
+    type: 'GET',
+    url: '/search',
+    dataType: 'html',
+    data : {
+      keywords: $('#keyword-search').val(),
+      start_times: times[0],
+      end_times: times[1],
+      days: getDays()
+    },
+    success: function(data) {
+      stateDataStack.push(data);
+      $('#results').html(data);
+      return false;
+    }
+  });
 });
 
-$(document.body).on("click", ".card", function() {
+$(document.body).on("click", ".valid-card", function() {
+    var times = getTimes();
     $.ajax({
         type: 'GET',
         url: '/class_data_search',
         dataType: 'html',
         data: {
-            id: $(this).attr('id'),
+          id: $(this).attr('id'),
+          start_times: times[0],
+          end_times: times[1],
+          days: getDays()
         },
         success: function(data) {
             stateDataStack.push(data);

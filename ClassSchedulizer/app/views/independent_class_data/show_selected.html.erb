@@ -1,10 +1,11 @@
 <% if !@independent_classes.empty? %>
   <table class="table">
-    <tr><th colspan=6>Lectures</th></tr>
+    <tr><th colspan=7>Lectures</th></tr>
     <tr>
       <th>Class Title</th>
       <th>Section</th>
       <th>Instructor</th>
+      <th>Days</th>
       <th>Start Time</th>
       <th>End Time</th>
       <th>Delete</th>
@@ -14,17 +15,19 @@
         <td><%= independent_class.course_id %> - <%= independent_class.title %></td>
         <td><%= independent_class.section %></td>
         <td><%= independent_class.instructor %></td>
-        <td><%= independent_class.start_time.strftime("%I:%M %P") %></td>
-        <td><%= independent_class.end_time.strftime("%I:%M %P") %></td>
+        <td class="days"><%= independent_class.days %></td>
+        <td class="start-time"><%= independent_class.start_time.strftime("%I:%M %P") %></td>
+        <td class="end-time"><%= independent_class.end_time.strftime("%I:%M %P") %></td>
         <td><input type="submit" ind_id="<%= independent_class.lecture_id %>" id="delete-class-btn" class="form-control" value="Delete"></td>
       </tr>
     <% end %>
     <% if !@dependent_classes.empty? %>
-      <tr><th colspan=6>Discussions</th></tr>
+      <tr><th colspan=7>Discussions</th></tr>
       <tr>
         <th>Class Title</th>
         <th>Section</th>
         <th>Instructor</th>
+        <th>Days</th>
         <th>Start Time</th>
         <th colspan=2>End Time</th>
       </tr>
@@ -33,8 +36,9 @@
           <td><%= dependent_class.course_id %> - <%= dependent_class.title %></td>
           <td><%= dependent_class.section %></td>
           <td><%= dependent_class.instructor %></td>
-          <td><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
-          <td colspan=2><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
+          <td class="days"><%= dependent_class.days %></td>
+          <td class="start-time"><%= dependent_class.start_time.strftime("%I:%M %P") %></td>
+          <td class="end-time" colspan=2><%= dependent_class.end_time.strftime("%I:%M %P") %></td>
         </tr>
       <% end %>
     <% end %>
