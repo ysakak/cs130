@@ -71,15 +71,17 @@ def get_class_list(url):
 	return class_rating_list
 
 ''' writes the class ratings to csv files '''
-def write_to_csv(class_rating_list):
+def write_to_csv(class_rating_list, counter):
 	os_dir = os.path.dirname(__file__)
 	class_rating_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/db/class_rating_data.csv')
-	class_rating_file = open(class_rating_filename, 'w')
+	class_rating_file = open(class_rating_filename, 'append')
 	class_rating_writer = csv.writer(class_rating_file, delimiter=',', \
-        lineterminator='\r\n', quoting=csv.QUOTE_ALL)
-	class_rating_writer.writerow(( \
+        lineterminator='\r\n', quoting=csv.QUOTE_ALL)	
+	if (counter == 0):
+		class_rating_writer.writerow(( \
         "class_name", "class_rating"))
+        counter += 1
 	for each_class in class_rating_list:
 		print "Writing data for " + each_class.class_name + " to file."
 		className = each_class.class_name
@@ -89,10 +91,12 @@ def write_to_csv(class_rating_list):
 
 
 i=1
+counter = 0
 while(i<=100):
 	url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
 	classRatings = get_class_list(url)
-	write_to_csv(classRatings)
+	write_to_csv(classRatings, counter)
+	counter += 1
 	i += 1
 
 #classRatings = get_class_list("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
@@ -140,11 +144,9 @@ def get_class_name_and_rating(url):
 
 
 
-
 #get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
 #get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=2")
 #get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=3")
-
 
 
 
@@ -155,12 +157,6 @@ def output_all_class_names():
 		url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
 		get_class_name_and_rating(url)
 		i += 1
-
-
-
-
-
-
 
 
 #reload(sys)
