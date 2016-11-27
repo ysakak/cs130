@@ -52,6 +52,7 @@ def get_class_rating(page, number):
 	return classRating
 
 def get_class_list(url):
+	class_rating_list = list()	
 	page = get_page(url)
 	html = page.text
 	html = html.replace('amp;', '')
@@ -59,7 +60,7 @@ def get_class_list(url):
 	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
 	classNamePattern1 = re.compile(classNameRegEx1)
 	classNamesAllClasses = re.findall(classNamePattern1, html)
-	class_rating_list = list()
+
 	i=0
 	j=0
 	while j<len(classNamesAllClasses):
@@ -90,78 +91,39 @@ def write_to_csv(class_rating_list, counter):
 	class_rating_file.close()
 
 
-i=1
+# i=1
+# counter = 0
+# while(i<=100):
+# 	url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
+# 	classRatings = get_class_list(url)
+# 	write_to_csv(classRatings, counter)
+# 	counter += 1
+# 	i += 1
+
+
+
+i=9
+j=1
 counter = 0
-while(i<=100):
-	url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-	classRatings = get_class_list(url)
-	write_to_csv(classRatings, counter)
-	counter += 1
+while (i <300):
+	while (j < 20):
+		url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
+		classRatings = get_class_list(url)
+		write_to_csv(classRatings, counter)
+		counter += 1
+		j += 1
 	i += 1
-
-#classRatings = get_class_list("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
-#write_to_csv(classRatings)
-
-
-#	i =1
-######################################change back to 100
-#	while(i<=100):
-#		url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-#		get_class_name_and_rating(url)
-#		i += 1
+	j=1
 
 
 
 
+# counter = 0
+# url = "http://www.bruinwalk.com/search/?category=classes&dept=1" 
+# classRatings = get_class_list(url)
+# write_to_csv(classRatings, counter)
+# counter += 1
+# url = "http://www.bruinwalk.com/search/?category=classes&dept=9" 
+# classRatings = get_class_list(url)
+# write_to_csv(classRatings, counter)
 
-
-
-
-# to test get_page()
-#get_page('http://www.bruinwalk.com')
-
-
-''' Extracts the class name from a url. '''
-def get_class_name_and_rating(url):
-	page = get_page(url)
-	html = page.text
-#	print html
-
-	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
-	classNamePattern1 = re.compile(classNameRegEx1)
-	classNamesAllClasses = re.findall(classNamePattern1, html)
-
-	i=0
-	j=0
-	while j<len(classNamesAllClasses):
-		print classNamesAllClasses[j]
-		classRating = get_class_rating(page, i)
-		print classRating
-		j += 2
-		i += 1
-		if(i==10):
-			i=0
-
-
-
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=2")
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=3")
-
-
-
-def output_all_class_names():
-	i =1
-######################################change back to 100
-	while(i<=100):
-		url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-		get_class_name_and_rating(url)
-		i += 1
-
-
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
-#output_all_class_names()
-
-# ratings = get_all_class_names_and_ratings()
-# write_to_csv(ratings)
