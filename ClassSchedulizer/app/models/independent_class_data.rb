@@ -28,6 +28,10 @@ class IndependentClassData < ApplicationRecord
     return time.strftime("%I:%M %P")
   end
 
+  def format_time_for_json(time)
+    return time.strftime("%H:%M")
+  end
+  
   def as_json(options = {})
     color_list = ["green", "olive", "yellow", "blue", "orange", "purple", "teal"]
 
@@ -35,8 +39,8 @@ class IndependentClassData < ApplicationRecord
       {
         :id => self.lecture_id,
         :title => self.title,
-        :start => format_time(self.start_time),
-        :end => format_time(self.end_time),
+        :start => format_time_for_json(self.start_time),
+        :end => format_time_for_json(self.end_time),
         :dow => self.days_to_array(),
         :color => color_list[self.lecture_id % 7]
       }

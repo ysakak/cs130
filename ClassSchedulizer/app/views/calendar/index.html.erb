@@ -271,9 +271,7 @@ $(document.body).on("click", "#add-section-btn", function() {
     $('#calendar-wrapper').removeAttr('style');
     $('#calendar-footer').removeAttr('style');
   }
-
   $('#calendar').fullCalendar('renderEvent', JSON.parse($(this).attr('ind_json')), 'stick');
-
   $('#selected-classes-title').addClass("tile tile-header col-md-10 offset-md-1");
   $('#selected-classes-title').removeAttr("style");
 
