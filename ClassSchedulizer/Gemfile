@@ -55,3 +55,8 @@ gem 'bootstrap', '~> 4.0.0.alpha5'
 
 gem 'elasticsearch-rails', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
 gem 'elasticsearch-model', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
+
+gem 'rspec', '~> 3.0'
+gem 'capybara'
+gem 'poltergeist'
+
