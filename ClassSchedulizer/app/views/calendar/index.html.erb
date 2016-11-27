@@ -219,6 +219,16 @@ $(document.body).on("click", "#independent-class-btn", function() {
             stateDataStack.push(data);
             $('#results').html(data);
             return false;
+        },
+        complete: function() {
+              var add_btns = 
+                document.getElementById('independent-class-details').getElementsByTagName('input');
+
+              for (var i = 0; i < add_btns.length; i++) {
+                var ind_class_id = JSON.parse(add_btns[i].getAttribute('ind_json')).id;
+                if ($.inArray(ind_class_id, selectedIndependentClassIds) != -1 )
+                  add_btns[i].disabled = true;
+              }
         }
     });
 });
