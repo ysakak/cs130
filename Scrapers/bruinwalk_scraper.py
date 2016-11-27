@@ -52,6 +52,7 @@ def get_class_rating(page, number):
 	return classRating
 
 def get_class_list(url):
+	class_rating_list = list()	
 	page = get_page(url)
 	html = page.text
 	html = html.replace('amp;', '')
@@ -59,7 +60,7 @@ def get_class_list(url):
 	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
 	classNamePattern1 = re.compile(classNameRegEx1)
 	classNamesAllClasses = re.findall(classNamePattern1, html)
-	class_rating_list = list()
+
 	i=0
 	j=0
 	while j<len(classNamesAllClasses):
@@ -101,14 +102,18 @@ def write_to_csv(class_rating_list, counter):
 
 
 
-i=1
+i=9
+j=1
 counter = 0
 while (i <300):
-	url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i)
-	classRatings = get_class_list(url)
-	write_to_csv(classRatings, counter)
-	counter += 1
+	while (j < 20):
+		url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
+		classRatings = get_class_list(url)
+		write_to_csv(classRatings, counter)
+		counter += 1
+		j += 1
 	i += 1
+	j=1
 
 
 
