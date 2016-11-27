@@ -3,6 +3,8 @@ require 'elasticsearch/model'
 class ClassData < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
+  attr_accessor :invalid
+  alias_method :invalid?, :invalid
   
   has_many :independent_classes, :class_name => 'IndependentClassData', :primary_key => 'title', :foreign_key => 'title'
   has_many :similar_classes, :class_name => 'ClassSimilarity', :primary_key => 'course_id', :foreign_key => 'course_id'

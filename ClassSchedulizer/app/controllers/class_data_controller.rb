@@ -20,6 +20,24 @@ class ClassDataController < ApplicationController
       @class_data = ClassData.all
     end
 
+    if (params[:start_times])
+      start_times = params[:start_times].split(",")
+      end_times = params[:end_times].split(",")
+      days_list = params[:days].split("|")
+
+      for class_data in @class_data
+        all_independent_classes_invalid = true
+
+        for independent_class in class_data.independent_classes
+          if !independent_class.overlap_times(start_times, end_times, days_list)
+            all_independent_classes_invalid = false
+          end
+        end
+
+        class_data.invalid = all_independent_classes_invalid
+      end
+    end
+
     @col_count = 6
     render :layout => false
   end
@@ -39,6 +57,16 @@ class ClassDataController < ApplicationController
       end
 
       @has_similar_classes = !@similar_classes.empty?
+
+      if (params[:start_times])
+        start_times = params[:start_times].split(",")
+        end_times = params[:end_times].split(",")
+        days_list = params[:days].split("|")
+
+        for independent_class in @independent_classes
+          independent_class.invalid = independent_class.overlap_times(start_times, end_times, days_list)
+        end
+      end
     end
 
     render :layout => false

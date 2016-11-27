@@ -9,7 +9,7 @@ import sys
 import requests
 from lxml import html
 
-''' Stores the data for each class '''
+''' Stores the data for each class: class name and class rating  '''
 class ClassRatingData:
 	def __init__(self, class_name, class_rating):
 		self.class_name = class_name
@@ -22,8 +22,6 @@ def get_page(url):
 	while page is None:
 		try:
 			page = requests.get(url)
-#			to print html of page
-#			print page.text 
 		except Exception:
 			print "Connection aborted... trying again"
 			max_tries -= 1
@@ -31,6 +29,7 @@ def get_page(url):
 				raise Exception('Connection aborted 10 times for ' + url)
 	return page
 
+''' Dictionary used as a switch statement to convert the class number on the given webpage to the element number of its title in the blue cirlce. Helps grab the correct class rating. '''
 def switch_statement(number):
 	return {
 		0: '1',
@@ -45,21 +44,22 @@ def switch_statement(number):
 		9: '22',
 	}[number]
 
+''' Gets the class rating for the given class by using its xpath '''
 def get_class_rating(page, number):
 	tree = html.fromstring(page.content)
 	xPath = "/html/body/section/div/section/div[2]/div[2]/div[4]/div[" + switch_statement(number) + "]/div/div[1]/span/b//text()"
 	classRating = tree.xpath(xPath)
 	return classRating
 
+''' Returns a list of ClassRatingData objects, which contains the class name and class rating.  '''
 def get_class_list(url):
+	class_rating_list = list()	
 	page = get_page(url)
 	html = page.text
 	html = html.replace('amp;', '')
-#	print html
 	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
 	classNamePattern1 = re.compile(classNameRegEx1)
 	classNamesAllClasses = re.findall(classNamePattern1, html)
-	class_rating_list = list()
 	i=0
 	j=0
 	while j<len(classNamesAllClasses):
@@ -70,7 +70,7 @@ def get_class_list(url):
 			i=0
 	return class_rating_list
 
-''' writes the class ratings to csv files '''
+''' Writes the class ratings to csv files '''
 def write_to_csv(class_rating_list, counter):
 	os_dir = os.path.dirname(__file__)
 	class_rating_filename = os.path.join( \
@@ -89,79 +89,17 @@ def write_to_csv(class_rating_list, counter):
 		class_rating_writer.writerow((each_class.class_name, each_class.class_rating))
 	class_rating_file.close()
 
-
-i=1
-counter = 0
-while(i<=100):
-	url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-	classRatings = get_class_list(url)
-	write_to_csv(classRatings, counter)
-	counter += 1
-	i += 1
-
-#classRatings = get_class_list("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
-#write_to_csv(classRatings)
-
-
-#	i =1
-######################################change back to 100
-#	while(i<=100):
-#		url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-#		get_class_name_and_rating(url)
-#		i += 1
-
-
-
-
-
-
-
-
-# to test get_page()
-#get_page('http://www.bruinwalk.com')
-
-
-''' Extracts the class name from a url. '''
-def get_class_name_and_rating(url):
-	page = get_page(url)
-	html = page.text
-#	print html
-
-	classNameRegEx1 = '<div class="title circle main">(.+?)</div>'
-	classNamePattern1 = re.compile(classNameRegEx1)
-	classNamesAllClasses = re.findall(classNamePattern1, html)
-
-	i=0
-	j=0
-	while j<len(classNamesAllClasses):
-		print classNamesAllClasses[j]
-		classRating = get_class_rating(page, i)
-		print classRating
-		j += 2
+''' Main function '''
+if __name__ == "__main__":
+	i=9
+	j=1
+	counter = 0
+	while (i <300):
+		while (j < 54):
+			url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
+			classRatings = get_class_list(url)
+			write_to_csv(classRatings, counter)
+			counter += 1
+			j += 1
 		i += 1
-		if(i==10):
-			i=0
-
-
-
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=1")
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=2")
-#get_class_name_and_rating("http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=3")
-
-
-
-def output_all_class_names():
-	i =1
-######################################change back to 100
-	while(i<=100):
-		url = "http://www.bruinwalk.com/search/?sort=alphabetical&category=classes&page=" + str(i)
-		get_class_name_and_rating(url)
-		i += 1
-
-
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
-#output_all_class_names()
-
-# ratings = get_all_class_names_and_ratings()
-# write_to_csv(ratings)
+		j=1

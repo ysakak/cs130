@@ -87,7 +87,11 @@
                   <td class="col-md-2"><%= independent_class.instructor %></td>
                   <td class="col-md-2">Bruinwalk Rating</td>
                   <td class="col-md-2">
-                    <input type="submit" id="independent-class-btn" class="form-control" independent_class_id="<%= independent_class.id %>" value="Details">
+                    <% if independent_class.invalid %>
+                      <input type="submit" class="form-control" value="Details" style="opacity: 0.5;">
+                    <% else %>
+                      <input type="submit" id="independent-class-btn" class="form-control" independent_class_id="<%= independent_class.id %>" value="Details">
+                    <% end %>
                   </td>
                 </tr>
               <% end %>
