@@ -117,7 +117,7 @@ def get_class_list(url):
 def write_to_csv(class_rating_list, counter):
 	os_dir = os.path.dirname(__file__)
 	class_rating_filename = os.path.join( \
-        os_dir, '../ClassSchedulizer/db/class_rating_data.csv')
+        os_dir, '../ClassSchedulizer/lib/seeds/class_rating_data.csv')
 	class_rating_file = open(class_rating_filename, 'append')
 	class_rating_writer = csv.writer(class_rating_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)	
