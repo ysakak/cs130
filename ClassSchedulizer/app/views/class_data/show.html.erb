@@ -44,13 +44,11 @@
               <% if @requisites.length == 0 %>
                 <td>None</td>
               <% else %>
-                <% @requisites.each do |requisite| %>
-                  <% if requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty? %>
-                    <td><%= requisite.requisite_course_id_1 %></td>
-                  <% else %>
-                    <td><%= requisite.requisite_course_id_1 %> <%= requisite.operator %> <%= requisite.requisite_course_id_2 %></td>
+                <td colspan=5>
+                  <% @reqstack.each do |req| %>
+                      <%= req %> 
                   <% end %>
-                <% end %>
+                </td>
               <% end %>
             </tr>
           </table>
