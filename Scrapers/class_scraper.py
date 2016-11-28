@@ -377,7 +377,7 @@ def get_class_data(major_data):
 def write_to_csv(major_data_list):
     os_dir = os.path.dirname(__file__)
     independent_classes_filename = os.path.join( \
-        os_dir, '../ClassSchedulizer/db/independent_class_data.csv')
+        os_dir, '../ClassSchedulizer/lib/seeds/independent_class_data.csv')
     independent_classes_file = open(independent_classes_filename, 'w')
     independent_classes_writer = csv.writer(independent_classes_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)
@@ -389,7 +389,7 @@ def write_to_csv(major_data_list):
         "level", "text_book_url", "url"))
 
     dependent_classes_filename = os.path.join( \
-        os_dir, '../ClassSchedulizer/db/dependent_class_data.csv')
+        os_dir, '../ClassSchedulizer/lib/seeds/dependent_class_data.csv')
     dependent_classes_file = open(dependent_classes_filename, 'w')
     dependent_classes_writer = csv.writer(dependent_classes_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)
@@ -398,14 +398,14 @@ def write_to_csv(major_data_list):
         "title", "major", "major_code", "term", "days", "start_time", "end_time", \
         "location", "instructor", "url"))
 
-    requisites_filename = os.path.join(os_dir, '../ClassSchedulizer/db/requisites.csv')
+    requisites_filename = os.path.join(os_dir, '../ClassSchedulizer/lib/seeds/requisites.csv')
     requisites_file = open(requisites_filename, 'w')
     requisites_writer = csv.writer(requisites_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)
     requisites_writer.writerow(("course_id", "operator", "requisite_course_id_1", \
                                 "requisite_course_id_2"))
 
-    ge_filename = os.path.join(os_dir, '../ClassSchedulizer/db/ge_categories.csv')
+    ge_filename = os.path.join(os_dir, '../ClassSchedulizer/lib/seeds/ge_categories.csv')
     ge_file = open(ge_filename, 'w')
     ge_writer = csv.writer(ge_file, delimiter=',', lineterminator='\r\n', \
         quoting=csv.QUOTE_ALL)
