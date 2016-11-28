@@ -91,7 +91,7 @@ for row in class_rating_reader:
 				clarity = row[6]
 				helpfulness = row[7]
 				registrar_bruinwalk_similiarity_writer.writerow((l_id, overall, easiness, workload, clarity, helpfulness))
-
+				break
 
 
 
