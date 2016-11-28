@@ -35,7 +35,7 @@ os_dir = os.path.dirname(__file__)
 independent_classes_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/lib/seeds/independent_class_data.csv')
 independent_classes_file = open(independent_classes_filename, 'r')
-independent_classes_reader = csv.reader(independent_classes_file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+independent_classes_reader = csv.reader(independent_classes_file, delimiter=',', lineterminator='\r\n')
 next(independent_classes_reader, None) # skip headers
 
 
@@ -48,10 +48,9 @@ for each_row in independent_classes_reader:
 	instr = each_row[14]
 	lec_id = each_row[0]
 	pairInstance = InstructorLectureIDPair(instr, lec_id)
-	########################HOW DO I MAKE IT A LIST OF PAIR OF INSTANCES
 	if course_id not in dictionary.keys():
-		pairList = list()
-	dictionary[course_id] = pairList.append(pairInstance)
+		dictionary[course_id] = list()
+	dictionary[course_id].append(pairInstance)
 
 
 
@@ -59,9 +58,9 @@ for each_row in independent_classes_reader:
 ''' write my own csv file'''
 registrar_bruinwalk_similiarity_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/lib/seeds/registrar_vs_bruinwalk_similiarity.csv')
-registrar_bruinwalk_similiarity_file = open(registrar_bruinwalk_similiarity_filename, 'append')
+registrar_bruinwalk_similiarity_file = open(registrar_bruinwalk_similiarity_filename, 'w')
 registrar_bruinwalk_similiarity_writer = csv.writer(registrar_bruinwalk_similiarity_file, delimiter=',', \
-        lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+        lineterminator='\r\n')
 registrar_bruinwalk_similiarity_writer.writerow(( \
         "lecture_id", "overall", "easiness", "workload", "clarity", "helpfulness"))
 
@@ -73,7 +72,7 @@ registrar_bruinwalk_similiarity_writer.writerow(( \
 class_rating_filename = os.path.join( \
        os_dir, '../ClassSchedulizer/lib/seeds/class_rating_data.csv')
 class_rating_file = open(class_rating_filename, 'r')
-class_rating_reader = csv.reader(class_rating_file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
+class_rating_reader = csv.reader(class_rating_file, delimiter=',', lineterminator='\r\n')
 next(class_rating_reader, None) # skip headers
 
 
@@ -81,8 +80,8 @@ next(class_rating_reader, None) # skip headers
 '''write lecture id and 5 ratings to csv file'''
 for row in class_rating_reader:
 	if (row[0] in dictionary.keys()):
-		for each_pair in dictionary[row[0]]:
-			similiarityPercentageInstructor = fuzz.ratio(row[2], each_pair.instructor)
+		for each_pair in dictionary.get(row[0]):
+			similiarityPercentageInstructor = fuzz.token_sort_ratio(row[2], each_pair.instructor)
 			if (similiarityPercentageInstructor > 75):
 				l_id = each_pair.lecture_id
 				overall = row[3]
@@ -92,12 +91,5 @@ for row in class_rating_reader:
 				helpfulness = row[7]
 				registrar_bruinwalk_similiarity_writer.writerow((l_id, overall, easiness, workload, clarity, helpfulness))
 				break
-
-
-
-
-
-
-
 
 

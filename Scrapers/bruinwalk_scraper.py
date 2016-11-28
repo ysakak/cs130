@@ -118,7 +118,7 @@ def write_to_csv(class_rating_list, counter):
 	os_dir = os.path.dirname(__file__)
 	class_rating_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/lib/seeds/class_rating_data.csv')
-	class_rating_file = open(class_rating_filename, 'append')
+	class_rating_file = open(class_rating_filename, 'a')
 	class_rating_writer = csv.writer(class_rating_file, delimiter=',', \
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)	
 	if (counter == 0):
@@ -143,13 +143,17 @@ def write_to_csv(class_rating_list, counter):
 
 ''' Main function '''
 if __name__ == "__main__":
+	reload(sys)
+	sys.setdefaultencoding('utf-8')
 	i=9
 	j=1
 	counter = 0
 	while (i <300):
-		while (j < 54):
+		while (j < 55):
 			url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
 			classRatings = get_class_list(url)
+			if len(classRatings) == 0:
+				break;
 			write_to_csv(classRatings, counter)
 			counter += 1
 			j += 1

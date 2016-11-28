@@ -88,7 +88,6 @@ var stateDataStack = [];
 var selectedIndependentClassIds = [];
 var selectedDependentClassIds = [];
 var classDict = {};
-var classToEventIdDict = {};
 var ge_categories = {
   "Foundations of Arts and Humanities": ["Literary and Cultural Analysis", "Philosophical and Linguistic Analysis", "Visual and Performance Arts Analysis and Practice"],
   "Foundations of Scientific Inquiry": ["Life Sciences", "Physical Sciences"],
@@ -350,6 +349,7 @@ $(document.body).on("click", "#delete-class-btn", function() {
     var dep_id = classDict[ind_id];
     $('#calendar').fullCalendar('removeEvents', dep_id);
     selectedDependentClassIds.splice(selectedDependentClassIds.indexOf(dep_id), 1);
+    delete classDict[ind_id];
   }
 
   if (selectedIndependentClassIds.length == 0 && selectedDependentClassIds.length == 0) {
