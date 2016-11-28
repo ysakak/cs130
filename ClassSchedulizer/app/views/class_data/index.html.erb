@@ -5,6 +5,7 @@
     <% end %>
     <% if class_data.invalid %>
       <div class="invalid-card card card-block text-xs-center" id="<%= class_data.id %>">
+      <p class="conflict-message">Time/Requisite Conflict</p>
     <% else %>
       <div class="valid-card card card-block text-xs-center" id="<%= class_data.id %>">
     <% end %>
@@ -30,6 +31,11 @@
 
 .card-block:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.conflict-message {
+  color: red;
+  font-size: 10px;
 }
 
 </style>
