@@ -58,7 +58,7 @@ for each_row in independent_classes_reader:
 ''' write my own csv file'''
 registrar_bruinwalk_similiarity_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/lib/seeds/registrar_vs_bruinwalk_similiarity.csv')
-registrar_bruinwalk_similiarity_file = open(registrar_bruinwalk_similiarity_filename, 'append')
+registrar_bruinwalk_similiarity_file = open(registrar_bruinwalk_similiarity_filename, 'w')
 registrar_bruinwalk_similiarity_writer = csv.writer(registrar_bruinwalk_similiarity_file, delimiter=',', \
         lineterminator='\r\n')
 registrar_bruinwalk_similiarity_writer.writerow(( \
