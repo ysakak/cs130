@@ -9,11 +9,22 @@ import sys
 import requests
 from lxml import html
 
-''' Stores the data for each class: class name and class rating  '''
+''' Stores the data for each professor: professor name, overall professor rating, easiness rating, workload rating, clarity rating, and helpfulness rating  '''
+class Professor:
+	def __init__(self, professor_name):
+		self.professor_name = professor_name
+		self.overall = ""
+		self.easiness = ""
+		self.workload = ""
+		self.clarity = ""
+		self.helpfulness = ""
+
+''' Stores the data for each class: class name, overall class rating, and a list of professors  '''
 class ClassRatingData:
 	def __init__(self, class_name, class_rating):
 		self.class_name = class_name
 		self.class_rating = class_rating
+		self.professors = list()
 
 ''' Returns the page for a given url. Retries up to 10 times to retrieve the page. '''
 def get_page(url):
@@ -51,6 +62,61 @@ def get_class_rating(page, number):
 	classRating = tree.xpath(xPath)
 	return classRating
 
+''' Returns a list of Professor objects, which contains the professor name, overall professor rating, easiness rating, workload rating, clarity rating, and helpfulness rating   '''
+def get_professors(class_name):
+	list_of_professors = list()
+	class_name = class_name.replace(' ', '-')
+	classURLName = class_name.lower()
+#	print classURLName
+	url = "http://www.bruinwalk.com/classes/" + classURLName
+	page = get_page(url)
+	html1 = page.text
+	html1 = html1.replace('amp;', '')
+	professorNameRegEx = '<span class="prof name">(.+?)</span>' 
+	professorNamePattern = re.compile(professorNameRegEx)
+	allProfessorNames = re.findall(professorNamePattern, html1)
+
+
+
+	# tree = html.fromstring(page.content)
+	# xPath = "/html/body/section/div/section/div[2]/div[2]/div[4]/div[" + switch_statement(number) + "]/div/div[1]/span/b//text()"
+	# classRating = tree.xpath(xPath)
+	# return classRating
+
+
+	tree = html.fromstring(page.content)
+	xPath = "//div[@class='hide-for-small-only']//td[@class='rating-cell']//span//text()"
+	allProfessorsRatings = tree.xpath(xPath)
+	
+	#print allProfessorsRatings
+
+
+	# ratingRegEx = '<span class="rating">(.+?)</span>'
+	# ratingPattern = re.compile(ratingRegEx)
+	# allProfessorsRatings = re.findall(ratingPattern, html)
+
+	i = 0
+	j=0
+	while (i < len(allProfessorNames)):
+		professorInstance = Professor(allProfessorNames[i])
+		professorInstance.overall = allProfessorsRatings[j]
+		professorInstance.easiness = allProfessorsRatings[j+1]
+		professorInstance.workload = allProfessorsRatings[j+2]
+		professorInstance.clarity = allProfessorsRatings[j+3]
+		professorInstance.helpfulness = allProfessorsRatings[j+4]
+#		print professorInstance.helpfulness
+		j = j+5
+#		print professorInstance.professor_name
+#		list_of_professors.append(professorInstance)
+#		print list_of_professors[0].professor_name
+		i += 2
+		list_of_professors.append(professorInstance)
+	return list_of_professors
+
+
+#get_professors("HIST 149A")
+
+
 ''' Returns a list of ClassRatingData objects, which contains the class name and class rating.  '''
 def get_class_list(url):
 	class_rating_list = list()	
@@ -63,7 +129,9 @@ def get_class_list(url):
 	i=0
 	j=0
 	while j<len(classNamesAllClasses):
-		class_rating_list.append(ClassRatingData(classNamesAllClasses[j], get_class_rating(page, i)))
+		classRatingDataInstance = ClassRatingData(classNamesAllClasses[j], get_class_rating(page, i))
+		classRatingDataInstance.professors = get_professors(classRatingDataInstance.class_name)
+		class_rating_list.append(classRatingDataInstance)
 		j += 2
 		i += 1
 		if(i==10):
@@ -80,13 +148,22 @@ def write_to_csv(class_rating_list, counter):
         lineterminator='\r\n', quoting=csv.QUOTE_ALL)	
 	if (counter == 0):
 		class_rating_writer.writerow(( \
-        "class_name", "class_rating"))
+        "class_name", "class_rating", "professor_name", "overall", "easiness", "workload", "clarity", "helpfulness"))
         counter += 1
+ 	n=0
 	for each_class in class_rating_list:
-		print "Writing data for " + each_class.class_name + " to file."
-		className = each_class.class_name
-		classRating = each_class.class_rating
-		class_rating_writer.writerow((each_class.class_name, each_class.class_rating))
+		for each_professor in each_class.professors:
+			print "Writing data for " + each_class.class_name + " to file."
+			className = each_class.class_name
+			classRating = each_class.class_rating
+			professorName = each_professor.professor_name
+			overall = each_professor.overall
+			easiness = each_professor.easiness
+			workload = each_professor.workload
+			clarity = each_professor.clarity
+			helpfulness = each_professor.helpfulness
+			class_rating_writer.writerow((className, classRating, professorName, overall, easiness, workload, clarity, helpfulness))
+			n += 1
 	class_rating_file.close()
 
 ''' Main function '''
@@ -94,8 +171,8 @@ if __name__ == "__main__":
 	i=9
 	j=1
 	counter = 0
-	while (i <300):
-		while (j < 54):
+	 while (i <300):
+	 	while (j < 54):
 			url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
 			classRatings = get_class_list(url)
 			write_to_csv(classRatings, counter)
