@@ -67,7 +67,6 @@ def get_professors(class_name):
 	list_of_professors = list()
 	class_name = class_name.replace(' ', '-')
 	classURLName = class_name.lower()
-#	print classURLName
 	url = "http://www.bruinwalk.com/classes/" + classURLName
 	page = get_page(url)
 	html1 = page.text
@@ -75,26 +74,9 @@ def get_professors(class_name):
 	professorNameRegEx = '<span class="prof name">(.+?)</span>' 
 	professorNamePattern = re.compile(professorNameRegEx)
 	allProfessorNames = re.findall(professorNamePattern, html1)
-
-
-
-	# tree = html.fromstring(page.content)
-	# xPath = "/html/body/section/div/section/div[2]/div[2]/div[4]/div[" + switch_statement(number) + "]/div/div[1]/span/b//text()"
-	# classRating = tree.xpath(xPath)
-	# return classRating
-
-
 	tree = html.fromstring(page.content)
 	xPath = "//div[@class='hide-for-small-only']//td[@class='rating-cell']//span//text()"
 	allProfessorsRatings = tree.xpath(xPath)
-	
-	#print allProfessorsRatings
-
-
-	# ratingRegEx = '<span class="rating">(.+?)</span>'
-	# ratingPattern = re.compile(ratingRegEx)
-	# allProfessorsRatings = re.findall(ratingPattern, html)
-
 	i = 0
 	j=0
 	while (i < len(allProfessorNames)):
@@ -104,17 +86,10 @@ def get_professors(class_name):
 		professorInstance.workload = allProfessorsRatings[j+2]
 		professorInstance.clarity = allProfessorsRatings[j+3]
 		professorInstance.helpfulness = allProfessorsRatings[j+4]
-#		print professorInstance.helpfulness
 		j = j+5
-#		print professorInstance.professor_name
-#		list_of_professors.append(professorInstance)
-#		print list_of_professors[0].professor_name
 		i += 2
 		list_of_professors.append(professorInstance)
 	return list_of_professors
-
-
-#get_professors("HIST 149A")
 
 
 ''' Returns a list of ClassRatingData objects, which contains the class name and class rating.  '''
