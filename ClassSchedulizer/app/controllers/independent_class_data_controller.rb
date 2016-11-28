@@ -13,6 +13,7 @@ class IndependentClassDataController < ApplicationController
     if (params[:id])
       @independent_class_data = IndependentClassData.find(params[:id])
       @dependent_classes = @independent_class_data.dependent_classes
+      logger.debug @independent_class_data.bruinwalk_rating.overall_rating
     end
 
     render layout: false

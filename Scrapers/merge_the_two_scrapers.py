@@ -82,7 +82,7 @@ for row in class_rating_reader:
 	if (row[0] in dictionary.keys()):
 		for each_pair in dictionary.get(row[0]):
 			similiarityPercentageInstructor = fuzz.token_sort_ratio(row[2], each_pair.instructor)
-			if (similiarityPercentageInstructor > 75):
+			if row[3] != "N/A" and similiarityPercentageInstructor > 50:
 				l_id = each_pair.lecture_id
 				overall = row[3]
 				easiness =  row[4]

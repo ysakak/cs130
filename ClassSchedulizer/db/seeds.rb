@@ -151,6 +151,19 @@ ge_csv.each do |row|
 	t.save
 end
 
+csv_bruinwalk_file = File.read(Rails.root.join('lib', 'seeds', 'registrar_vs_bruinwalk_similiarity.csv'))
+bruinwalk_csv = CSV.parse(csv_bruinwalk_file, :headers => true, :encoding => 'UTF-8')
+bruinwalk_csv.each do |row|
+	t = BruinwalkRating.new
+	t.lecture_id = row['lecture_id']
+	t.overall_rating = row['overall']
+	t.easiness_rating = row['easiness']
+	t.workload_rating = row['workload']
+	t.clarity_rating = row['clarity']
+	t.helpfulness_rating = row['helpfulness']
+	t.save
+end
+
 ClassData.import
 
 puts "There are now #{IndependentClassData.count} rows in the independent class data table"
@@ -159,3 +172,4 @@ puts "There are now #{ClassData.count} rows in the class data table"
 puts "There are now #{ClassSimilarity.count} rows in the class similarity table"
 puts "There are now #{Requisite.count} rows in the requisites table"
 puts "There are now #{GeCategory.count} rows in the ge categories table"
+puts "There are now #{BruinwalkRating.count} rows in the bruinwalk ratings table"

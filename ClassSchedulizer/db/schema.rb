@@ -13,8 +13,14 @@
 ActiveRecord::Schema.define(version: 20161128033419) do
 
   create_table "bruinwalk_ratings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "lecture_id"
+    t.float    "overall_rating",     limit: 24
+    t.float    "easiness_rating",    limit: 24
+    t.float    "workload_rating",    limit: 24
+    t.float    "clarity_rating",     limit: 24
+    t.float    "helpfulness_rating", limit: 24
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "class_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

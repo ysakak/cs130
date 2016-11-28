@@ -9,8 +9,7 @@
         <% if @dependent_classes.length > 0 %>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#dependent_classes" role="tab">Discussions</a></li>
         <% end %>
-        <% if true %>
-        <%# TODO swap to check if bruinwalk ratings exist later %>
+        <% if !@independent_class_data.bruinwalk_rating.nil? %>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#bruinwalk" role="tab">Bruinwalk Ratings</a></li>
         <% end %>
       </ul>
@@ -144,7 +143,7 @@
           <% end %>
         </div>
         <div class="tab-pane" id="bruinwalk">
-          <% if true %>
+          <% if !@independent_class_data.bruinwalk_rating.nil? %>
             <table class="table">
               <tr>
                 <th colspan = 5>Bruinwalk Rating</th>
@@ -157,11 +156,11 @@
                 <th>Helpfulness</th>
               </tr>
               <tr>
-                <td>5.0</td>
-                <td>5.0</td>
-                <td>5.0</td>
-                <td>5.0</td>
-                <td>5.0</td>
+                <td><%= @independent_class_data.bruinwalk_rating.overall_rating %></td>
+                <td><%= @independent_class_data.bruinwalk_rating.easiness_rating %></td>
+                <td><%= @independent_class_data.bruinwalk_rating.workload_rating %></td>
+                <td><%= @independent_class_data.bruinwalk_rating.clarity_rating %></td>
+                <td><%= @independent_class_data.bruinwalk_rating.helpfulness_rating %></td>
               </tr>
             </table>
           <% end %>

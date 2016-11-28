@@ -1,6 +1,7 @@
 class IndependentClassData < ApplicationRecord
   has_many :dependent_classes, :class_name => 'DependentClassData', :primary_key => 'lecture_id', :foreign_key => 'lecture_id'
   belongs_to :class_data, :class_name => 'ClassData', :foreign_key => 'title'
+  has_one :bruinwalk_rating, :class_name => 'BruinwalkRating', :primary_key => 'lecture_id', :foreign_key => 'lecture_id'
 
   attr_accessor :invalid
   alias_method :invalid?, :invalid
