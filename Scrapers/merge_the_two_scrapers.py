@@ -36,7 +36,7 @@ independent_classes_filename = os.path.join( \
         os_dir, '../ClassSchedulizer/lib/seeds/independent_class_data.csv')
 independent_classes_file = open(independent_classes_filename, 'r')
 independent_classes_reader = csv.reader(independent_classes_file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
-next(reader, None) # skip headers
+next(independent_classes_reader, None) # skip headers
 
 
 
@@ -49,7 +49,7 @@ for each_row in independent_classes_reader:
 	lec_id = each_row[0]
 	pairInstance = InstructorLectureIDPair(instr, lec_id)
 	########################HOW DO I MAKE IT A LIST OF PAIR OF INSTANCES
-	if !(course_id in dictionary.keys()):
+	if course_id not in dictionary.keys():
 		pairList = list()
 	dictionary[course_id] = pairList.append(pairInstance)
 
@@ -74,7 +74,7 @@ class_rating_filename = os.path.join( \
        os_dir, '../ClassSchedulizer/lib/seeds/class_rating_data.csv')
 class_rating_file = open(class_rating_filename, 'r')
 class_rating_reader = csv.reader(class_rating_file, delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL)
-next(reader, None) # skip headers
+next(class_rating_reader, None) # skip headers
 
 
 
@@ -92,6 +92,7 @@ for row in class_rating_reader:
 				helpfulness = row[7]
 				registrar_bruinwalk_similiarity_writer.writerow((l_id, overall, easiness, workload, clarity, helpfulness))
 				break
+
 
 
 
