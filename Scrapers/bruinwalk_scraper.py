@@ -155,7 +155,7 @@ def write_to_csv(class_rating_list, counter):
 		for each_professor in each_class.professors:
 			print "Writing data for " + each_class.class_name + " to file."
 			className = each_class.class_name
-			classRating = each_class.class_rating
+			classRating = each_class.class_rating[0]
 			professorName = each_professor.professor_name
 			overall = each_professor.overall
 			easiness = each_professor.easiness
@@ -171,8 +171,8 @@ if __name__ == "__main__":
 	i=9
 	j=1
 	counter = 0
-	 while (i <300):
-	 	while (j < 54):
+	while (i <300):
+		while (j < 54):
 			url = "http://www.bruinwalk.com/search/?category=classes&dept=" + str(i) + "&page=" + str(j)
 			classRatings = get_class_list(url)
 			write_to_csv(classRatings, counter)
