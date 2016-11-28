@@ -123,6 +123,12 @@ var getDays = function() {
   }).get().join('|');
 }
 
+var getCurrClasses = function() {
+  return $(".selected_course_id").map(function() {
+    return $(this).attr("selected_course_id");
+  }).get().join();
+}  
+
 $('#search-form').submit(function(event) {
     event.preventDefault();
     var times = getTimes();
@@ -134,7 +140,8 @@ $('#search-form').submit(function(event) {
         major: $('#search').val(),
         start_times: times[0],
         end_times: times[1],
-        days: getDays()
+        days: getDays(),
+        currClasses: getCurrClasses()
       },
       success: function(data) {
         stateDataStack.push(data);
@@ -157,7 +164,8 @@ $(document.body).on('click', '#ge-search-submit', function() {
             category: $('#category-search').val(),
             start_times: times[0],
             end_times: times[1],
-            days: getDays()
+            days: getDays(),
+            currClasses: getCurrClasses()
         },
         success: function(data) {
             stateDataStack.push(data);
@@ -174,7 +182,8 @@ $(document.body).on('click', '#ge-search-submit', function() {
             foundation: $('#foundation-search').val(),
             start_times: times[0],
             end_times: times[1],
-            days: getDays()
+            days: getDays(),
+            currClasses: getCurrClasses()
         },
         success: function(data) {
             stateDataStack.push(data);
@@ -196,7 +205,8 @@ $(document.body).on('click', '#keyword-search-submit', function(){
       keywords: $('#keyword-search').val(),
       start_times: times[0],
       end_times: times[1],
-      days: getDays()
+      days: getDays(),
+      currClasses: getCurrClasses()
     },
     success: function(data) {
       stateDataStack.push(data);
@@ -216,7 +226,8 @@ $(document.body).on("click", ".valid-card", function() {
           id: $(this).attr('id'),
           start_times: times[0],
           end_times: times[1],
-          days: getDays()
+          days: getDays(),
+          currClasses: getCurrClasses()
         },
         success: function(data) {
             stateDataStack.push(data);

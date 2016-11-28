@@ -38,6 +38,38 @@ class ClassDataController < ApplicationController
       end
     end
 
+    if (params[:currClasses])
+      curr_classes = params[:currClasses].split(",")
+
+      for class_data in @class_data
+        
+        reqClasses = class_data.requisites
+        reqStack = Array.new
+        if reqClasses.length > 0
+          reqClasses.each_with_index do |requisite, index|
+            print reqClasses.length
+            reqStack.push(requisite.requisite_course_id_1)
+            unless requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty?
+              reqStack.push(requisite.operator)
+              reqStack.push(requisite.requisite_course_id_2)
+            end
+            if index != reqClasses.size - 1
+              reqStack.push("AND")
+            end
+          end
+        end
+
+        intersection = reqStack & curr_classes
+
+        if !intersection.empty?
+            class_data.invalid = true
+        else
+          class_data.invalid = false
+        end
+
+      end
+    end
+
     @col_count = 6
     render :layout => false
   end
@@ -48,7 +80,36 @@ class ClassDataController < ApplicationController
       @independent_classes = @class_data.independent_classes
       total_similarities = @class_data.similar_classes
       @similar_classes = []
+
+
       @requisites = @class_data.requisites
+      @reqstack = Array.new
+      if @requisites.length > 0
+        @requisites.each_with_index do |requisite, index|
+          print @requisites.length
+          @reqstack.push(requisite.requisite_course_id_1)
+          unless requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty?
+            @reqstack.push(requisite.operator)
+            @reqstack.push(requisite.requisite_course_id_2)
+          end
+          if index != @requisites.size - 1
+            @reqstack.push("AND")
+          end
+        end
+      end
+
+      if (params[:currClasses])
+        curr_classes = params[:currClasses].split(",")
+        intersection = @reqstack & curr_classes
+
+        for independent_class in @independent_classes
+          if !intersection.empty?
+            independent_class.invalid = true
+          else
+            independent_class.invalid = false
+          end
+        end
+      end
 
       for similarity in total_similarities.order('similarity desc')
         if similarity.similarity > 0.05
