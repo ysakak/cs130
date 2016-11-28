@@ -81,7 +81,7 @@ next(class_rating_reader, None) # skip headers
 for row in class_rating_reader:
 	if (row[0] in dictionary.keys()):
 		for each_pair in dictionary.get(row[0]):
-			similiarityPercentageInstructor = fuzz.ratio(row[2], each_pair.instructor)
+			similiarityPercentageInstructor = fuzz.token_sort_ratio(row[2], each_pair.instructor)
 			if (similiarityPercentageInstructor > 75):
 				l_id = each_pair.lecture_id
 				overall = row[3]
@@ -91,6 +91,5 @@ for row in class_rating_reader:
 				helpfulness = row[7]
 				registrar_bruinwalk_similiarity_writer.writerow((l_id, overall, easiness, workload, clarity, helpfulness))
 				break
-
 
 
