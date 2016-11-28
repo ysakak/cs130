@@ -47,14 +47,9 @@ class ClassDataController < ApplicationController
         reqStack = Array.new
         if reqClasses.length > 0
           reqClasses.each_with_index do |requisite, index|
-            print reqClasses.length
             reqStack.push(requisite.requisite_course_id_1)
             unless requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty?
-              reqStack.push(requisite.operator)
               reqStack.push(requisite.requisite_course_id_2)
-            end
-            if index != reqClasses.size - 1
-              reqStack.push("AND")
             end
           end
         end
@@ -86,7 +81,6 @@ class ClassDataController < ApplicationController
       @reqstack = Array.new
       if @requisites.length > 0
         @requisites.each_with_index do |requisite, index|
-          print @requisites.length
           @reqstack.push(requisite.requisite_course_id_1)
           unless requisite.requisite_course_id_2.nil? || requisite.requisite_course_id_2.empty?
             @reqstack.push(requisite.operator)

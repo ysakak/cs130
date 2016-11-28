@@ -342,7 +342,7 @@ $(document.body).on("click", "#add-section-btn", function() {
 });
 
 $(document.body).on("click", "#delete-class-btn", function() {
-  var ind_id = $(this).attr('ind_id');
+  var ind_id = parseInt($(this).attr('ind_id'), 10);
   $('#calendar').fullCalendar('removeEvents', ind_id);
   selectedIndependentClassIds.splice(selectedIndependentClassIds.indexOf(ind_id), 1);
 
