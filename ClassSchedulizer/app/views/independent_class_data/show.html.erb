@@ -132,7 +132,11 @@
                   <% end %>
                   <td><%= dependent_class.instructor %></td>
                   <td>
-                    <input type="submit" id="add-section-btn" class="form-control" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>'  dep_json='<%= dependent_class.as_json.to_json.html_safe %>' value="Add">
+                    <% if dependent_class.as_json.nil? %>
+                      <input type="submit" id="add-section-btn" class="form-control" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>' value="Add">
+                    <% else %>
+                      <input type="submit" id="add-section-btn" class="form-control" ind_json= '<%= @independent_class_data.as_json.to_json.html_safe %>' dep_json='<%= dependent_class.as_json.to_json.html_safe %>' value="Add">
+                    <% end %>
                   </td>
                 </tr>
               <% end %>

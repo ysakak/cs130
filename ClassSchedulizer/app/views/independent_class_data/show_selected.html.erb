@@ -12,7 +12,7 @@
     </tr>
     <% @independent_classes.each do |independent_class| %>
       <tr>
-        <td><%= independent_class.course_id %> - <%= independent_class.title %></td>
+        <td class="course_id" course_id="<%= independent_class.course_id %>"><%= independent_class.course_id %> - <%= independent_class.title %></td>
         <td><%= independent_class.section %></td>
         <td><%= independent_class.instructor %></td>
         <td class="days"><%= independent_class.days %></td>
