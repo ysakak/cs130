@@ -1,0 +1,2 @@
+class BruinwalkRating < ApplicationRecord
+end
