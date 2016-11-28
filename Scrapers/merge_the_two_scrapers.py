@@ -48,10 +48,9 @@ for each_row in independent_classes_reader:
 	instr = each_row[14]
 	lec_id = each_row[0]
 	pairInstance = InstructorLectureIDPair(instr, lec_id)
-	########################HOW DO I MAKE IT A LIST OF PAIR OF INSTANCES
 	if course_id not in dictionary.keys():
-		pairList = list()
-	dictionary[course_id] = pairList.append(pairInstance)
+		dictionary[course_id] = list()
+	dictionary[course_id].append(pairInstance)
 
 
 
